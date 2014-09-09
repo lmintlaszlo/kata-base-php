@@ -10,6 +10,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$base = new Base();
 
-		$this->assertEquals(0.1, $base->getVersion());
+		$this->assertEquals(0.1, $base->getVersion(true));
+        $this->assertEquals(0.1, $base->getVersion());
 	}
 }
