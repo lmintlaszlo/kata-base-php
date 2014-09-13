@@ -1,6 +1,6 @@
 <?php
 
-namespace Kata\Kata01Hiker;
+namespace Kata\Kata01PrimeFactors;
 
 class Hiker {
 

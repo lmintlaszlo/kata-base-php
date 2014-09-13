@@ -1,6 +1,6 @@
 <?php
 
-use Kata\Kata01Hiker\Hiker;
+use Kata\Kata01PrimeFactors\Hiker;
 
 
 class Kata01HikerTest extends PHPUnit_Framework_TestCase {
