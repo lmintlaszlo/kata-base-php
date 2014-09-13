@@ -13,7 +13,20 @@ class IntSequence {
             throw new \InvalidArgumentException;
         }
 
+        foreach ($sequence as $integer)
+        {
+            if(intval($integer) !== $integer)
+            {
+                throw new InvalidIntegerException();
+            }
+        }
+
         $this->sequence = $sequence;
+    }
+
+    public function calculateMin()
+    {
+
     }
 
     /** Getters */
