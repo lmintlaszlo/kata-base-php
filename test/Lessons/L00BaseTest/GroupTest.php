@@ -1,7 +1,5 @@
 <?php
 
-namespace Kata\Test\Kata00;
-
 use Kata\Lessons\L00Base\Group;
 
 class GroupTest extends \PHPUnit_Framework_TestCase
