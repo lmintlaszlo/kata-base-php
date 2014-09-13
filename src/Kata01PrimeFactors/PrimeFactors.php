@@ -2,7 +2,7 @@
 
 namespace Kata\Kata01PrimeFactors;
 
-class Hiker {
+class PrimeFactors {
 
     public function getPrimeFactor($number)
     {
