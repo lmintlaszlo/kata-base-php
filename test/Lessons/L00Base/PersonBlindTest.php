@@ -2,7 +2,7 @@
 
 namespace Kata\Test\Kata00;
 
-use Kata\Kata00\Person;
+use Kata\Lessons\L00Base\Person;
 
 /**
  * Test for the Person class, the blind way, this is what you will start with

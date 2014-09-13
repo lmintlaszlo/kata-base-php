@@ -1,6 +1,6 @@
 <?php
 
-use Kata\Kata01PrimeFactors\PrimeFactors;
+use Kata\Lessons\L01PrimeFactors\PrimeFactors;
 
 
 class PrimeFactorsTest extends PHPUnit_Framework_TestCase {

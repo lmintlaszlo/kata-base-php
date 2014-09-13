@@ -2,7 +2,7 @@
 
 namespace Kata\Test\Kata00;
 
-use Kata\Kata00\Person;
+use Kata\Lessons\L00Base\Person;
 
 class PersonTest extends \PHPUnit_Framework_TestCase
 {

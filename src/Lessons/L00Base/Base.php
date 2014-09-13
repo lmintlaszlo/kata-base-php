@@ -1,6 +1,6 @@
 <?php
 
-namespace Kata;
+namespace Kata\Lessons\L00Base;
 
 class Base
 {

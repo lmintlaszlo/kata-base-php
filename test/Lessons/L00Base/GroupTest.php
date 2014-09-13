@@ -2,7 +2,7 @@
 
 namespace Kata\Test\Kata00;
 
-use Kata\Kata00\Group;
+use Kata\Lessons\L00Base\Group;
 
 class GroupTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,7 +17,7 @@ class GroupTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddPersonToGroupAndCheckCountIsOne()
 	{
-		$person = $this->getMockBuilder('Kata\\Kata00\\Person')->disableOriginalConstructor()->getMock();
+		$person = $this->getMockBuilder('Kata\\Lessons\\L00Base\\Person')->disableOriginalConstructor()->getMock();
 
 		$group = new Group();
 		$group->add($person);
@@ -26,12 +26,12 @@ class GroupTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException       \Kata\Kata00\GroupException
+	 * @expectedException       \Kata\Lessons\L00Base\GroupException
 	 * @expectedExceptionCode   208
 	 */
 	public function testSamePersonCanNotBeAddedTwice()
 	{
-		$person = $this->getMockBuilder('Kata\\Kata00\\Person')->disableOriginalConstructor()->getMock();
+		$person = $this->getMockBuilder('Kata\\Lessons\\L00Base\\Person')->disableOriginalConstructor()->getMock();
 
 		$group = new Group();
 		$group->add($person);
@@ -40,7 +40,7 @@ class GroupTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddTwoPeopleToGroupAndCheckCountIsTwo()
 	{
-		$person1 = $this->getMockBuilder('Kata\\Kata00\\Person')->disableOriginalConstructor()->getMock();
+		$person1 = $this->getMockBuilder('Kata\\Lessons\\L00Base\\Person')->disableOriginalConstructor()->getMock();
 		$person2 = clone $person1;
 
 		$group = new Group();
@@ -52,7 +52,7 @@ class GroupTest extends \PHPUnit_Framework_TestCase
 
 	public function testListingOfThreePerson()
 	{
-		$person1 = $this->getMockBuilder('Kata\\Kata00\\Person')->disableOriginalConstructor()->getMock();
+		$person1 = $this->getMockBuilder('Kata\\Lessons\\L00Base\\Person')->disableOriginalConstructor()->getMock();
 		$person2 = clone $person1;
 		$person3 = clone $person1;
 		$person1->expects($this->once())->method('getFullName')->willReturn('John Doe');
@@ -85,7 +85,7 @@ class GroupTest extends \PHPUnit_Framework_TestCase
 			'large'  => []
 		];
 
-		$person = $this->getMockBuilder('Kata\\Kata00\\Person')->disableOriginalConstructor()->getMock();
+		$person = $this->getMockBuilder('Kata\\Lessons\L00Base\\Person')->disableOriginalConstructor()->getMock();
 
 		for ($i = 0; $i < 25; $i++)
 		{

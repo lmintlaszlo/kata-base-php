@@ -1,6 +1,6 @@
 <?php
 
-namespace Kata\Kata01PrimeFactors;
+namespace Kata\Lessons\L01PrimeFactors;
 
 class PrimeFactors {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kata\Kata00;
+namespace Kata\Lessons\L00Base;
 
 class Group implements \Countable
 {

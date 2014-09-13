@@ -2,7 +2,7 @@
 
 namespace Kata\Test;
 
-use Kata\Base;
+use Kata\Lessons\L00Base\Base;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
