@@ -42,7 +42,7 @@ class IntSequenceTest extends \PHPUnit_Framework_TestCase
      * @expectedException InvalidIntegerException
      * @dataProvider constructorInvalidIntegerDataProvider
      */
-    public function testConstructorInvalidInteger($sequence)
+    public function _testConstructorInvalidInteger($sequence)
     {
         new IntSequence($sequence);
     }
