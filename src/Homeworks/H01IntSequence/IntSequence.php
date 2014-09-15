@@ -2,6 +2,8 @@
 
 namespace Kata\Homeworks\H01IntSequence;
 
+use Kata\Homeworks\H01IntSequence\InvalidIntegerException;
+
 class IntSequence {
 
     /**
@@ -26,7 +28,7 @@ class IntSequence {
 
         foreach ($sequence as $integer)
         {
-            if(intval($integer) !== $integer)
+            if(!is_int($integer))
             {
                 throw new InvalidIntegerException();
             }
@@ -81,4 +83,7 @@ class IntSequence {
         return $this->sequence;
     }
 
-} 
+}
+
+class xxx extends \Exception
+{}

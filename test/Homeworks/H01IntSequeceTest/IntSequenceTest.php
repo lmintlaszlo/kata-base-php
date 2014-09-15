@@ -1,7 +1,6 @@
 <?php
 
 use Kata\Homeworks\H01IntSequence\IntSequence;
-use Kata\Homeworks\H01IntSequence\InvalidIntegerException;
 
 class IntSequenceTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,10 +38,10 @@ class IntSequenceTest extends \PHPUnit_Framework_TestCase
      *
      * @param $sequence
      *
-     * @expectedException InvalidIntegerException
+     * @expectedException Kata\Homeworks\H01IntSequence\InvalidIntegerException
      * @dataProvider constructorInvalidIntegerDataProvider
      */
-    public function _testConstructorInvalidInteger($sequence)
+    public function testConstructorInvalidInteger($sequence)
     {
         new IntSequence($sequence);
     }
@@ -143,7 +142,7 @@ class IntSequenceTest extends \PHPUnit_Framework_TestCase
     public function constructorInvalidIntegerDataProvider()
     {
         return array(
-            array(array(1,1,1,1,1)),
+            array(array(false,1,1,1,1)),
             array(array('1',1,1,1)),
             array(array(new stdClass(),1)),
         );
