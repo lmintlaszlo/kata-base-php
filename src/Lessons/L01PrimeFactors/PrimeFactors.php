@@ -6,13 +6,19 @@ class PrimeFactors {
 
     public function getPrimeFactors($number)
     {
-        $sqrt = sqrt($number);
-        for ($i = 2; $i <= $sqrt; $i++) {
-            if ($number % $i == 0) {
-                return array_merge(array($i), $this->getPrimeFactors($number/$i));
+        $primeFactors = array();
+        
+        for ($i = 2; $i <= $number; $i++)
+        {
+            if ($number % $i == 0)
+            {
+                $primeFactors[] = $i;
+                $number = $number / $i;
+                $i--;
             }
         }
-        return array($number);
+        
+        return $primeFactors;
     }
 
 } 
