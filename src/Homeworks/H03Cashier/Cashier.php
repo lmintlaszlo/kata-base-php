@@ -12,14 +12,32 @@ class Cashier
      */
     public function calculate(Basket $basket)
     {
-        $price = 0;
+        $sumPrice = 0;
 
-        foreach($basket->getProducts() as $product)
+        foreach($basket->getProducts() as $productName => $product)
         {
-            $price = $price + ($product['price'] * $product['amount']);
+            $unitPrice    = $product['price'];
+            $extraProduct = false;
+
+            if (isset($product['minAmountForDiscount']) && $product['amount'] >= $product['minAmountForDiscount'])
+            {
+                switch ($product['discountType'])
+                {
+                    case 'cheaperProduct' : $unitPrice    = $product['discountValue']; break;
+                    case 'extraProduct'   : $extraProduct = true; break;
+                }
+            }
+
+            //echo $productName . ": " . $product['amount'] . ' * ' . $unitPrice . PHP_EOL;
+            $sumPrice = $sumPrice + ($unitPrice * $product['amount']);
+
+            if ($extraProduct)
+            {
+                $basket->addExtraProduct($product);
+            }
         }
 
-        return $price;
+        return $sumPrice;
     }
 
 } 

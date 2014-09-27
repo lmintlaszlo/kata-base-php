@@ -15,6 +15,8 @@ class CashierTest extends \PHPUnit_Framework_TestCase
     {
         $cashier = new Cashier();
         $this->assertEquals($expectedPrice, $cashier->calculate($basket));
+
+        //print_r($basket->getProducts());
     }
 
     /** Data providers */
@@ -30,6 +32,16 @@ class CashierTest extends \PHPUnit_Framework_TestCase
             'name'                 => 'Apple',
             'price'                => 32,
             'amount'               => 1,
+            'amountUnit'           => 'kg',
+            'minAmountForDiscount' => 5,
+            'discountType'         => 'cheaperProduct',
+            'discountValue'        => 25,
+        ));
+
+        $basket->add(array(
+            'name'                 => 'Apple',
+            'price'                => 32,
+            'amount'               => 5,
             'amountUnit'           => 'kg',
             'minAmountForDiscount' => 5,
             'discountType'         => 'cheaperProduct',
@@ -61,7 +73,7 @@ class CashierTest extends \PHPUnit_Framework_TestCase
         ));
 
         return array(
-            array(2046.98, $basket),
+            array(2164.98, $basket),
         );
     }
 

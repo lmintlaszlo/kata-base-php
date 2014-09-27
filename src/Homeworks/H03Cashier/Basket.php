@@ -21,7 +21,7 @@ class Basket
      */
     public function add(array $product)
     {
-        $productName = array_shift($product);
+        $productName = $product['name'];
 
         if (!array_key_exists($productName, $this->products))
         {
@@ -30,10 +30,16 @@ class Basket
         }
         else
         {
-            $this->products[$productName]['amount']++;
+            $this->products[$productName]['amount'] = $this->products[$productName]['amount'] + $product['amount'];
         }
 
         return true;
+    }
+
+    public function addExtraProduct($product)
+    {
+        $product['amount'] = $product['discountValue'];
+        $this->add($product);
     }
 
     public function getProducts()
