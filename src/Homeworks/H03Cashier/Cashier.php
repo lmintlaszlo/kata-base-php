@@ -10,9 +10,16 @@ class Cashier
      *
      * @return float
      */
-    public function calculate($price, $amount)
+    public function calculate(array $basket)
     {
-        return $price * $amount;
+        $price = 0;
+
+        foreach($basket as $product)
+        {
+            $price = $price + ($product['price'] * $product['amount']);
+        }
+
+        return $price;
     }
 
 } 
