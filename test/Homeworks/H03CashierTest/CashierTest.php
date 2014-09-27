@@ -24,11 +24,30 @@ class CashierTest extends \PHPUnit_Framework_TestCase
     public function calculateDataProvider()
     {
         return array(
-            array(6,
+            array(1046.99,
                 array(
-                    array('price' => 2, 'amount' => 1),
-                    array('price' => 2, 'amount' => 1),
-                    array('price' => 2, 'amount' => 1),
+                    array(
+                        'name'                 => 'Apple',
+                        'price'                => 32,
+                        'amount'               => 1,
+                        'amountUnit'           => 'kg',
+                        'minAmountForDiscount' => 5,
+                        'discountType'         => 'cheaperProduct',
+                        'discountValue'        => 25,
+                    ),
+                    array(
+                        'name'   => 'Light',
+                        'price'  => 15,
+                        'amount' => 1,
+                    ),
+                    array(
+                        'name'                 => 'Starship',
+                        'price'                => 999.99,
+                        'amount'               => 1,
+                        'minAmountForDiscount' => 2,
+                        'discountType'         => 'extraProduct',
+                        'discountValue'        => 1,
+                    ),
                 )
             ),
         );
