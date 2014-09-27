@@ -10,10 +10,10 @@ class CashierTest extends \PHPUnit_Framework_TestCase
      * @param $expectedPrice
      * @dataProvider calculateDataProvider
      */
-    public function testCalculate($expectedPrice)
+    public function testCalculate($expectedPrice, $price, $amount)
     {
         $cashier = new Cashier();
-        $this->assertEquals($expectedPrice, $cashier->calculate());
+        $this->assertEquals($expectedPrice, $cashier->calculate($price, $amount));
     }
 
     /** Data providers */
@@ -24,7 +24,7 @@ class CashierTest extends \PHPUnit_Framework_TestCase
     public function calculateDataProvider()
     {
         return array(
-            array(2),
+            array(2, 2, 1),
         );
     }
 

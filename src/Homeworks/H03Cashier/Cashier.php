@@ -10,9 +10,9 @@ class Cashier
      *
      * @return float
      */
-    public function calculate()
+    public function calculate($price, $amount)
     {
-        return 1+1;
+        return $price * $amount;
     }
 
 } 
