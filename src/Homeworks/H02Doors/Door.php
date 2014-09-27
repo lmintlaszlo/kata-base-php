@@ -3,18 +3,16 @@
 namespace Kata\Homeworks\H02Doors;
 
 use Kata\Homeworks\H01IntSequence\InvalidIntegerException;
-use Kata\Lessons\L01PrimeFactors\PrimeFactors;
+use Kata\Lessons\L01Number\Number;
 
 class Door
 {
+    /** The possible states of the door */
     const STATE_CLOSED = false;
     const STATE_OPENED = true;
 
     private $number;
-    private $numberOfDividers = 1;
-    private $numberOfToggles  = 0;
     private $state;
-    private $finalState;
 
     public function __construct($number)
     {
@@ -25,66 +23,49 @@ class Door
 
         $this->state  = self::STATE_CLOSED;
         $this->number = $number;
-
-        $this->calculateNumberOfDividers();
-        $this->calculateFinalState();
     }
 
+    /**
+     * Switches the state of the door.
+     */
     public function toggle()
     {
         $this->state = ($this->state === self::STATE_CLOSED)
-            ? $this->state = self::STATE_OPENED
+            ? self::STATE_OPENED
             : self::STATE_CLOSED;
-        $this->numberOfToggles++;
     }
 
-    public function getNumberOfToggles()
-    {
-        return $this->numberOfToggles;
-    }
-
+    /**
+     * Tells the final state of the door without the need of walking through them.
+     * @return bool
+     */
     public function getFinalState()
     {
-        return $this->finalState;
+        /** @todo: Dependency injection */
+        $number = new Number($this->number);
+        return ($number->getNumberOfDividers() % 2 == 0)
+            ? self::STATE_CLOSED
+            : self::STATE_OPENED;
     }
 
-    public function getNumberOfDividers()
-    {
-        return $this->numberOfDividers;
-    }
-
+    /**
+     * Return the number of the door.
+     *
+     * @return int
+     */
     public function getNumber()
     {
         return $this->number;
     }
 
+    /**
+     * Return the state of the door.
+     *
+     * @return bool
+     */
     public function getState()
     {
         return $this->state;
-    }
-
-    private function calculateFinalState()
-    {
-        if ($this->numberOfDividers % 2 == 0)
-        {
-            $this->finalState = self::STATE_CLOSED;
-        }
-
-        $this->finalState = self::STATE_OPENED;
-
-    }
-
-    private function calculateNumberOfDividers()
-    {
-        $primeFactorizer  = new PrimeFactors();
-        $primeFactors     = $primeFactorizer->getPrimeFactors($this->number);
-
-        $numberOfEachPrime = array_count_values($primeFactors);
-
-        foreach($numberOfEachPrime as $base => $power)
-        {
-            $this->numberOfDividers = ($this->numberOfDividers * ($power+1));
-        }
     }
 
 }

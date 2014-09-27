@@ -82,8 +82,4 @@ class IntSequence {
     {
         return $this->sequence;
     }
-
 }
-
-class xxx extends \Exception
-{}

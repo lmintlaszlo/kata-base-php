@@ -1,20 +1,20 @@
 <?php
 
-use Kata\Lessons\L01PrimeFactors\PrimeFactors;
+use Kata\Lessons\L01Number\Number;
 
 
-class PrimeFactorsTest extends PHPUnit_Framework_TestCase {
+class NumberTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * Test method for PrimeFactors->getPrimeFactors.
+     * Test method for Number::getPrimeFactors().
      *
      * @dataProvider primeDataProvider
      */
     public function testPrimeFactors($number, array $expectedPrimeFactors)
     {
-        $primeFactors = new PrimeFactors();
+        $numberObject = new Number($number);
 
-        $this->assertEquals($expectedPrimeFactors, $primeFactors->getPrimeFactors($number));
+        $this->assertEquals($expectedPrimeFactors, $numberObject->getPrimeFactors());
     }
 
     /**
