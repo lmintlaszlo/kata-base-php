@@ -15,13 +15,13 @@ class Basket
      * Adds a product to the basket. Either by adding a new or incrementing
      * the amount.
      *
-     * @param array $product
+     * @param $product Product
      *
      * @return bool
      */
-    public function add(array $product)
+    public function add(Product $product)
     {
-        $productName = $product['name'];
+        $productName = $product->getName();
 
         if (!array_key_exists($productName, $this->products))
         {
@@ -30,18 +30,29 @@ class Basket
         }
         else
         {
-            $this->products[$productName]['amount'] = $this->products[$productName]['amount'] + $product['amount'];
+            $newAmount = $this->products[$productName]->getAmount() + $product->getAmount();
+            $this->products[$productName]->setAmount($newAmount);
         }
 
         return true;
     }
 
-    public function addExtraProduct($product)
+    /**
+     * Adds the amount specified by the discount to the present amount.
+     *
+     * @param Product $product
+     */
+    public function addExtraProduct(Product $product)
     {
-        $product['amount'] = $product['discountValue'];
+        $product->setAmount($product->getDiscountValue());
         $this->add($product);
     }
 
+    /**
+     * Returns the products in the basket.
+     *
+     * @return array
+     */
     public function getProducts()
     {
         return $this->products;

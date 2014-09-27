@@ -2,6 +2,9 @@
 
 use Kata\Homeworks\H03Cashier\Cashier;
 use Kata\Homeworks\H03Cashier\Basket;
+use Kata\Homeworks\H03Cashier\Apple;
+use Kata\Homeworks\H03Cashier\Light;
+use Kata\Homeworks\H03Cashier\Starship;
 
 class CashierTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,15 +12,15 @@ class CashierTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Kata\Homeworks\H03Cashier\Cashier::calculate
      * @param $expectedPrice
+     * @param $basket Basket
      * @dataProvider calculateDataProvider
      */
     public function testCalculate($expectedPrice, Basket $basket)
     {
         $cashier = new Cashier();
         $this->assertEquals($expectedPrice, $cashier->calculate($basket));
-
-        //print_r($basket->getProducts());
     }
+
 
     /** Data providers */
 
@@ -28,53 +31,14 @@ class CashierTest extends \PHPUnit_Framework_TestCase
     {
         $basket = new Basket();
 
-        $basket->add(array(
-            'name'                 => 'Apple',
-            'price'                => 32,
-            'amount'               => 1,
-            'amountUnit'           => 'kg',
-            'minAmountForDiscount' => 5,
-            'discountType'         => 'cheaperProduct',
-            'discountValue'        => 25,
-        ));
-
-        $basket->add(array(
-            'name'                 => 'Apple',
-            'price'                => 32,
-            'amount'               => 5,
-            'amountUnit'           => 'kg',
-            'minAmountForDiscount' => 5,
-            'discountType'         => 'cheaperProduct',
-            'discountValue'        => 25,
-        ));
-
-        $basket->add(array(
-            'name'   => 'Light',
-            'price'  => 15,
-            'amount' => 1,
-        ));
-
-        $basket->add(array(
-            'name'                 => 'Starship',
-            'price'                => 999.99,
-            'amount'               => 1,
-            'minAmountForDiscount' => 2,
-            'discountType'         => 'extraProduct',
-            'discountValue'        => 1,
-        ));
-
-        $basket->add(array(
-            'name'                 => 'Starship',
-            'price'                => 999.99,
-            'amount'               => 1,
-            'minAmountForDiscount' => 2,
-            'discountType'         => 'extraProduct',
-            'discountValue'        => 1,
-        ));
+        $basket->add(new Apple());
+        $basket->add(new Apple(5));
+        $basket->add(new Light());
+        $basket->add(new Starship());
+        $basket->add(new Starship());
 
         return array(
             array(2164.98, $basket),
         );
     }
-
 } 

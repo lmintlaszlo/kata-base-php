@@ -8,6 +8,7 @@ class Cashier
     /**
      * Calculates the price of goods in a basket.
      *
+     * @param $basket Basket
      * @return float
      */
     public function calculate(Basket $basket)
@@ -16,20 +17,20 @@ class Cashier
 
         foreach($basket->getProducts() as $productName => $product)
         {
-            $unitPrice    = $product['price'];
+            $unitPrice    = $product->getPrice();
             $extraProduct = false;
 
-            if (isset($product['minAmountForDiscount']) && $product['amount'] >= $product['minAmountForDiscount'])
+            if ($product->isDiscountAvailable() && $product->isDiscountLimitReached())
             {
-                switch ($product['discountType'])
+                switch ($product->getDiscountType())
                 {
-                    case 'cheaperProduct' : $unitPrice    = $product['discountValue']; break;
-                    case 'extraProduct'   : $extraProduct = true; break;
+                    case Product::DISCOUNT_CHEAPER : $unitPrice    = $product->getDiscountValue(); break;
+                    case Product::DISCOUNT_EXTRA   : $extraProduct = true; break;
                 }
             }
 
             //echo $productName . ": " . $product['amount'] . ' * ' . $unitPrice . PHP_EOL;
-            $sumPrice = $sumPrice + ($unitPrice * $product['amount']);
+            $sumPrice = $sumPrice + ($unitPrice * $product->getAmount());
 
             if ($extraProduct)
             {
