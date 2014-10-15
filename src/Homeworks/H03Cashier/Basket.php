@@ -38,17 +38,6 @@ class Basket
     }
 
     /**
-     * Adds the amount specified by the discount to the present amount.
-     *
-     * @param Product $product
-     */
-    public function addExtraProduct(Product $product)
-    {
-        $product->setAmount($product->getDiscountValue());
-        $this->add($product);
-    }
-
-    /**
      * Returns the products in the basket.
      *
      * @return array

@@ -5,7 +5,7 @@ namespace Kata\Homeworks\H03Cashier;
 abstract class Product
 {
     /** Discount types */
-    const DISCOUNT_CHEAPER = 'cheaperProduct';
+    const DISCOUNT_PRICE = 'cheaperProduct';
     const DISCOUNT_EXTRA   = 'extraProduct';
 
     /** Amount types */
@@ -45,7 +45,7 @@ abstract class Product
     {
         return ($this->getAmount() >= $this->getMinAmountForDiscount());
     }
-
+    
     /** Getters */
     public function getName()
     {

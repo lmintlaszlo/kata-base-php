@@ -9,12 +9,13 @@ class BasketTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers Kata\Homeworks\H03Cashier\Basket::add
+     * @uses Kata\Homeworks\H03Cashier\Product
      * @dataProvider addDataProvider
      */
     public function testAdd($products)
     {
         $basket = new Basket();
-
+        
         foreach ($products as $product)
         {
             $this->assertTrue($basket->add($product));
@@ -33,9 +34,8 @@ class BasketTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     new Apple(5),
-                    new Light(),
-                    new Starship(2),
-                )
+                    new Apple(2),
+                ),
             ),
         );
     }

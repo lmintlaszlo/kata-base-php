@@ -17,28 +17,28 @@ class Cashier
 
         foreach($basket->getProducts() as $productName => $product)
         {
-            $unitPrice    = $product->getPrice();
-            $extraProduct = false;
+            $price  = $product->getPrice();
+            $amount = $product->getAmount();
 
             if ($product->isDiscountAvailable() && $product->isDiscountLimitReached())
             {
                 switch ($product->getDiscountType())
                 {
-                    case Product::DISCOUNT_CHEAPER : $unitPrice    = $product->getDiscountValue(); break;
-                    case Product::DISCOUNT_EXTRA   : $extraProduct = true; break;
+                    case Product::DISCOUNT_PRICE :
+                        $price = $product->getDiscountValue();
+                        break;
+                
+                    case Product::DISCOUNT_EXTRA :                        
+                        $free   = (int)($product->getAmount() / ($product->getMinAmountForDiscount() + $product->getDiscountValue()));
+                        $amount = ($amount - $free);
+                        break;
                 }
             }
 
-            //echo $productName . ": " . $product['amount'] . ' * ' . $unitPrice . PHP_EOL;
-            $sumPrice = $sumPrice + ($unitPrice * $product->getAmount());
-
-            if ($extraProduct)
-            {
-                $basket->addExtraProduct($product);
-            }
+            $sumPrice = $sumPrice + ($price * $amount);
         }
 
         return $sumPrice;
     }
 
-} 
+}

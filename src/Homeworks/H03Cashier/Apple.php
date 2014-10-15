@@ -15,7 +15,7 @@ class Apple extends Product
     protected $price                = 32;
     protected $amountUnit           = self::AMOUNT_KG;
     protected $minAmountForDiscount = 5;
-    protected $discountType         = self::DISCOUNT_CHEAPER;
+    protected $discountType         = self::DISCOUNT_PRICE;
     protected $discountValue        = 25;
 
 } 

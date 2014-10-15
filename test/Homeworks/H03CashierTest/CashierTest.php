@@ -11,6 +11,8 @@ class CashierTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Kata\Homeworks\H03Cashier\Cashier::calculate
+     * @uses Kata\Homeworks\H03Cashier\Basket
+     * @uses Kata\Homeworks\H03Cashier\Product
      * @param $expectedPrice
      * @param $basket Basket
      * @dataProvider calculateDataProvider
@@ -34,6 +36,7 @@ class CashierTest extends \PHPUnit_Framework_TestCase
         $basket->add(new Apple());
         $basket->add(new Apple(5));
         $basket->add(new Light());
+        $basket->add(new Starship());
         $basket->add(new Starship());
         $basket->add(new Starship());
 
