@@ -5,9 +5,6 @@ use Kata\Homeworks\H03Cashier\Basket;
 use Kata\Homeworks\H03Cashier\Apple;
 use Kata\Homeworks\H03Cashier\Light;
 use Kata\Homeworks\H03Cashier\Starship;
-use Kata\Homeworks\H03Cashier\DiscountPrice;
-use Kata\Homeworks\H03Cashier\DiscountPiece;
-use Kata\Homeworks\H03Cashier\DiscountNone;
 
 class CashierTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,12 +34,9 @@ class CashierTest extends \PHPUnit_Framework_TestCase
     {
         $basket = new Basket();
 
-        $basket->add(new Apple());
-        $basket->add(new Apple(5));
+        $basket->add(new Apple(6));
         $basket->add(new Light());
-        $basket->add(new Starship());
-        $basket->add(new Starship());
-        $basket->add(new Starship());
+        $basket->add(new Starship(3));
 
         return array(
             array(2164.98, $basket),
