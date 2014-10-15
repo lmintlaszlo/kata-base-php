@@ -14,8 +14,10 @@ class Apple extends Product
     protected $name                 = 'Apple';
     protected $price                = 32;
     protected $amountUnit           = self::AMOUNT_KG;
-    protected $minAmountForDiscount = 5;
-    protected $discountType         = self::DISCOUNT_PRICE;
-    protected $discountValue        = 25;
+    
+    public function __construct($amount = 1)
+    {
+        parent::__construct($amount, new DiscountPrice(5, 25));
+    }
 
 } 

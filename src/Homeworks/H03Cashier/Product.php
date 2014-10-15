@@ -5,8 +5,8 @@ namespace Kata\Homeworks\H03Cashier;
 abstract class Product
 {
     /** Discount types */
-    const DISCOUNT_PRICE = 'cheaperProduct';
-    const DISCOUNT_EXTRA   = 'extraProduct';
+    const DISCOUNT_PRICE   = 'cheaperProduct';
+    const DISCOUNT_PIECE   = 'extraProduct';
 
     /** Amount types */
     const AMOUNT_KG    = 'kg';
@@ -17,13 +17,43 @@ abstract class Product
     protected $price;
     protected $amount;
     protected $amountUnit;
-    protected $minAmountForDiscount;
-    protected $discountType;
-    protected $discountValue;
+    protected $discount;
 
-    public function __construct($amount = 1)
+    public function __construct($amount = 1, Discount $discount = null)
     {
-        $this->amount = $amount;
+        $this->amount   = $amount;
+        $this->discount = $discount;
+    }
+    
+    /**
+     * Tells what price should the cashier use for count.
+     * 
+     * @return int
+     */
+    public function getPriceForCashier()
+    {
+        if ($this->isDiscountGranted() && $this->getDiscount() instanceof DiscountPrice)
+        {
+            return $this->getDiscount()->getValue();
+        }
+        
+        return $this->getPrice();
+    }
+    
+    /**
+     * Tells what amount should the cashier use for count.
+     * 
+     * @return int
+     */
+    public function getAmountForCashier()
+    {
+        if ($this->isDiscountGranted() && $this->getDiscount() instanceof DiscountPiece)
+        {
+            $free = (int)($this->getAmount() / ($this->getDiscount()->getMinimumAmount() + $this->getDiscount()->getValue()));
+            return ($this->getAmount() - $free);
+        }
+        
+        return $this->getAmount();
     }
 
     /**
@@ -31,9 +61,9 @@ abstract class Product
      *
      * @return bool
      */
-    public function isDiscountAvailable()
+    private function isDiscountAvailable()
     {
-        return ($this->minAmountForDiscount !== null);
+        return !($this->getDiscount() instanceof DiscountNone);
     }
 
     /**
@@ -41,9 +71,20 @@ abstract class Product
      *
      * @return bool
      */
-    public function isDiscountLimitReached()
+    private function isDiscountLimitReached()
     {
-        return ($this->getAmount() >= $this->getMinAmountForDiscount());
+        return ($this->getAmount() >= $this->getDiscount()->getMinimumAmount());
+    }
+    
+    
+    /**
+     * Tells if the discount can be applied to the product.
+     * 
+     * @return bool
+     */
+    private function isDiscountGranted()
+    {
+        return ($this->isDiscountAvailable() && $this->isDiscountLimitReached());
     }
     
     /** Getters */
@@ -67,24 +108,14 @@ abstract class Product
         return $this->amountUnit;
     }
 
-    public function getMinAmountForDiscount()
+    public function getDiscount()
     {
-        return $this->minAmountForDiscount;
+        return $this->discount;
     }
-
-    public function getDiscountType()
-    {
-        return $this->discountType;
-    }
-
-    public function getDiscountValue()
-    {
-        return $this->discountValue;
-    }
-
+    
     /** Setters */
     public function setAmount($amount)
     {
         $this->amount = $amount;
     }
-} 
+}
