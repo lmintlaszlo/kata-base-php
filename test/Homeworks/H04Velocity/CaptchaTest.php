@@ -15,6 +15,7 @@ class CaptchaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($necessary, $captcha->isNecessary());
     }
     
+
     /** Data providers */
     
     public function isCaptcaNecessaryProvider()

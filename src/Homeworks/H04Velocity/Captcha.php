@@ -37,10 +37,15 @@
  */
 
 /**
- * - captcha construct-or egyenkent kerdezze meg az osszes feltetelt,
- *   hogy aktiv-e (observernek utananezni)
- * 
+ * - construct-or egyenkent kerdezze meg az osszes feltetelt, hogy aktiv-e
+ * - constructor parameterben kapja a felteteleket
+ * - felteteleknek kozos os
+ * - az osben isNecessary
+ * - a feltetelekben a limitek
+ * - db
+ * - observernek utananezni
  * - loginonkent megfeleloen valtozzanak a feltetelek
+ * - login attempt
  */
 
 namespace Kata\Homeworks\H04Velocity;
