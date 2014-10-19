@@ -48,10 +48,17 @@ namespace Kata\Homeworks\H04Velocity;
 
 class Captcha
 {
+    private $necessary = false;
 
-    public function isCaptchaNeeded()
+
+    public function __construct($necessary)
     {
-        return true;
+        $this->necessary = $necessary;
+    }
+    
+    public function isNecessary()
+    {
+        return $this->necessary;
     }
     
 }
