@@ -30,9 +30,10 @@ class NumberTest extends PHPUnit_Framework_TestCase
     
     /**
      * @covers \Kata\Lessons\L01Number\Number::getPrimeFactors
+     * @uses Kata\Lessons\L01Number\Number
      * @dataProvider primeDataProvider
      */
-    public function testPrimeFactors($number, array $expectedPrimeFactors)
+    public function testGetPrimeFactors($number, array $expectedPrimeFactors)
     {
         $numberObject = new Number($number);
 
@@ -40,7 +41,8 @@ class NumberTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * @covers \Kata\Lessons\L01Number\Number::getNuberOfDividers
+     * @covers \Kata\Lessons\L01Number\Number::getNumberOfDividers
+     * @uses Kata\Lessons\L01Number\Number
      * @dataProvider dividersDataProvider
      */
     public function testGetNumberOfDividers($number, $expectedDividers)
@@ -52,6 +54,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
     
     /**
      * @covers \Kata\Lessons\L01Number\Number::getNumber
+     * @uses Kata\Lessons\L01Number\Number
      * @dataProvider validNumberDataProvider
      */
     public function testGetNumber($validNumber)
@@ -63,6 +66,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
     
     /**
      * @covers \Kata\Lessons\L01Number\Number::getFloatValue
+     * @uses Kata\Lessons\L01Number\Number
      * @dataProvider validNumberDataProvider
      */
     public function testGetFloatValue($validNumber)
@@ -74,6 +78,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
     
     /**
      * @covers \Kata\Lessons\L01Number\Number::getIntValue
+     * @uses Kata\Lessons\L01Number\Number
      * @dataProvider validNumberDataProvider
      */
     public function testGetIntValue($validNumber)

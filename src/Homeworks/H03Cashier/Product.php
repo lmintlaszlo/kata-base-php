@@ -37,7 +37,7 @@ abstract class Product
             return $this->getDiscount()->getValue();
         }
         
-        return $this->getPrice();
+        return $this->price;
     }
     
     /**
@@ -74,8 +74,7 @@ abstract class Product
     private function isDiscountLimitReached()
     {
         return ($this->getAmount() >= $this->getDiscount()->getMinimumAmount());
-    }
-    
+    }    
     
     /**
      * Tells if the discount can be applied to the product.
@@ -87,25 +86,16 @@ abstract class Product
         return ($this->isDiscountAvailable() && $this->isDiscountLimitReached());
     }
     
+
     /** Getters */
     public function getName()
     {
         return $this->name;
     }
 
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
     public function getAmount()
     {
         return $this->amount;
-    }
-
-    public function getAmountUnit()
-    {
-        return $this->amountUnit;
     }
 
     public function getDiscount()
