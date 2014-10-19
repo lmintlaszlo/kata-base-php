@@ -40,7 +40,7 @@
  * - construct-or egyenkent kerdezze meg az osszes feltetelt, hogy aktiv-e
  * - constructor parameterben kapja a felteteleket
  * - felteteleknek kozos os
- * - az osben isNecessary
+ * - az osben isLimitReached
  * - a feltetelekben a limitek
  * - db
  * - observernek utananezni
@@ -55,10 +55,12 @@ class Captcha
 {
     private $necessary = false;
 
-
-    public function __construct($necessary)
+    public function __construct(Condition $condition)
     {
-        $this->necessary = $necessary;
+        if ($condition->isLimitReached())
+        {
+            $this->necessary = true;
+        }
     }
     
     public function isNecessary()
