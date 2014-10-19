@@ -7,7 +7,12 @@ class Number
     private $number;
 
     public function __construct($number)
-    {
+    {        
+        if (!is_numeric($number))
+        {
+            throw new InvalidNumberException('The given value is not a valid number');
+        }
+        
         $this->number = $number;
     }
 
@@ -51,5 +56,35 @@ class Number
         }
 
         return $numberOfDividers;
+    }
+    
+    /**
+     * Gives the float value of the number.
+     * 
+     * @return float
+     */
+    public function getFloatValue()
+    {
+        return (float)$this->number;
+    }
+    
+    /**
+     * Gives the int value of the number.
+     * 
+     * @return int
+     */
+    public function getIntValue()
+    {
+        return (int)$this->number;
+    }
+    
+    /**
+     * Gives the number itself.
+     * 
+     * @return type
+     */
+    public function getNumber()
+    {
+        return $this->number;
     }
 } 
