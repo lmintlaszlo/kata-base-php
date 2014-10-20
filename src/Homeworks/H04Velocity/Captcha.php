@@ -37,29 +37,33 @@
  */
 
 /**
- * - construct-or egyenkent kerdezze meg az osszes feltetelt, hogy aktiv-e
- * - constructor parameterben kapja a felteteleket
- * - felteteleknek kozos os
- * - az osben isLimitReached
- * - a feltetelekben a limitek
+ * - construct-or egyenkent kerdezze meg az osszes feltetelt, hogy aktiv-e OK
+ * - constructor parameterben kapja a felteteleket OK
+ * - felteteleknek kozos os OK
+ * - az osben isLimitReached OK
+ * - a feltetelekben a limitek OK
  * - db
  * - observernek utananezni
  * - loginonkent megfeleloen valtozzanak a feltetelek
  * - login attempt
+ * - login attempt username es ip
  */
 
 namespace Kata\Homeworks\H04Velocity;
 
 
 class Captcha
-{
-    private $necessary = false;
+{    
+    const IS_NECESSARY     = true;
+    const IS_NOT_NECESSARY = false;    
+    
+    private $necessary = self::IS_NOT_NECESSARY;
 
-    public function __construct(Condition $condition)
+    public function __construct(Ip $ip, IpCountry $ipCountry, IpRange $ipRange, Username $username)
     {
-        if ($condition->isLimitReached())
+        if ($ip->isLimitReached() || $ipCountry->isLimitReached() || $ipRange->isLimitReached() || $username->isLimitReached())
         {
-            $this->necessary = true;
+            $this->necessary = self::IS_NECESSARY;
         }
     }
     
