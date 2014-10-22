@@ -37,16 +37,21 @@
  */
 
 /**
- * - construct-or egyenkent kerdezze meg az osszes feltetelt, hogy aktiv-e OK
- * - constructor parameterben kapja a felteteleket OK
- * - felteteleknek kozos os OK
+ * - construct-or egyenkent kerdezze meg az osszes countert, hogy aktiv-e OK
+ * - constructor parameterben kapja a countereket OK
+ * - countereknek kozos os OK
  * - az osben isLimitReached OK
- * - a feltetelekben a limitek OK
+ * - az osben increment OK
+ * - a counterekben a limitek OK
+ * - a counterekben a tablanev OK
+ * - 
  * - db
  * - observernek utananezni
  * - loginonkent megfeleloen valtozzanak a feltetelek
  * - login attempt
  * - login attempt username es ip
+ * - environmentben kene beallitani a db kapcsolatokat,
+ *   ez fogna ossze a captchat es a login attempt-et OK
  */
 
 namespace Kata\Homeworks\H04Velocity;
@@ -67,6 +72,11 @@ class Captcha
         }
     }
     
+    /**
+     * Megmnondja, hogy szukseges-e a captcha megjelenitese.
+     * 
+     * @return boolean
+     */
     public function isNecessary()
     {
         return $this->necessary;

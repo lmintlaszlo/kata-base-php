@@ -2,9 +2,9 @@
 
 namespace Kata\Homeworks\H04Velocity;
 
-class IpCountry extends Condition
+class IpCountry extends Counter
 {
     protected $limit   = 1000;
-    protected $counter = 0;
+    protected $tableName = 'ip_country';
     
 }

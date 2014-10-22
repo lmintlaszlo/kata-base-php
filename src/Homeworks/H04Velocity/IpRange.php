@@ -3,9 +3,9 @@
 namespace Kata\Homeworks\H04Velocity;
 
 
-class IpRange extends Condition
+class IpRange extends Counter
 {
     protected $limit   = 500;
-    protected $counter = 0;
+    protected $tableName = 'ip_range';
     
 }

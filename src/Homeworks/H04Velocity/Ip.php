@@ -3,8 +3,8 @@
 namespace Kata\Homeworks\H04Velocity;
 
 
-class Ip extends Condition
+class Ip extends Counter
 {
-    protected $limit   = 3;
-    protected $counter = 0;
+    protected $limit     = 3;
+    protected $tableName = 'ip';
 }

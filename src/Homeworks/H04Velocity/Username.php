@@ -2,9 +2,9 @@
 
 namespace Kata\Homeworks\H04Velocity;
 
-class Username extends Condition
+class Username extends Counter
 {
     protected $limit   = 3;
-    protected $counter = 0;
+    protected $tableName = 'username';
     
 }
