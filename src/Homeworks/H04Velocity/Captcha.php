@@ -52,6 +52,8 @@
  * - login attempt username password OK
  * - environmentben kene beallitani a db kapcsolatokat,
  *   ez fogna ossze a captchat es a login attempt-et OK
+ * - environment teszt
+ * - login attempt teszt
  */
 
 namespace Kata\Homeworks\H04Velocity;
