@@ -44,12 +44,12 @@
  * - az osben increment OK
  * - a counterekben a limitek OK
  * - a counterekben a tablanev OK
- * - 
- * - db
+ * - sajat exceptionok
+ * - db ?ok?
  * - observernek utananezni
- * - loginonkent megfeleloen valtozzanak a feltetelek
+ * - loginonkent megfeleloen valtozzanak a counterek
  * - login attempt
- * - login attempt username es ip
+ * - login attempt username password OK
  * - environmentben kene beallitani a db kapcsolatokat,
  *   ez fogna ossze a captchat es a login attempt-et OK
  */
