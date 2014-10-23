@@ -44,7 +44,7 @@ class Counter
 
             $stmt->execute();
         } catch (Exception $ex) {
-            echo $e->getMessage();
+            echo $ex->getMessage();
         }
     }
     
@@ -67,7 +67,7 @@ class Counter
             $stmt->execute();
         
         } catch (Exception $ex) {
-            echo $e->getMessage();
+            echo $ex->getMessage();
         }
     }
     
@@ -93,7 +93,7 @@ class Counter
             
             return $result['counter'];
         } catch (Exception $ex) {
-            echo $e->getMessage();
+            echo $ex->getMessage();
         }
     }
 }

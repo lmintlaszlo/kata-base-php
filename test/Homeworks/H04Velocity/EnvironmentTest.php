@@ -4,20 +4,26 @@ use Kata\Homeworks\H04Velocity\Environment;
 
 class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {
-    private $dbHost = 'localhost';
-    private $dbName = 'phpunit';
-    private $dbUser = 'phpunit';
-    private $dbPass = 'phpunit';
-    
-    private $connection;
-    
-    public function __construct()
+    private static $db;
+
+    private static $dbHost = 'localhost';
+    private static $dbName = 'phpunit';
+    private static $dbUser = 'phpunit';
+    private static $dbPass = 'phpunit';
+
+    public static function setUpBeforeClass()
     {
-        $this->connection = new \PDO(
-                "mysql:host=$this->dbHost;dbname=$this->dbName",
-                $this->dbUser, $this->dbPass
+        self::$db = new \PDO(
+            'mysql:host=' . self::$dbHost . ';dbname=' . self::$dbName,
+            self::$dbUser, self::$dbPass
         );
     }
+    
+    public static function tearDownAfterClass()
+    {
+        self::$db = null;
+    }
+
 
     public function testDoLoginForm()
     {

@@ -6,35 +6,51 @@ use Kata\Homeworks\H04Velocity\Ip;
 
 class CounterTest extends \PHPUnit_Framework_TestCase
 {
-    private $dbHost = 'localhost';
-    private $dbName = 'phpunit';
-    private $dbUser = 'phpunit';
-    private $dbPass = 'phpunit';
-    
-    private $connection;
-    
-    protected function setUp()
+    private static $db;
+
+    private static $dbHost = 'localhost';
+    private static $dbName = 'phpunit';
+    private static $dbUser = 'phpunit';
+    private static $dbPass = 'phpunit';
+
+    public static function setUpBeforeClass()
     {
-        $this->connection = new \PDO(
-                "mysql:host=$this->dbHost;dbname=$this->dbName",
-                $this->dbUser, $this->dbPass
+        self::$db = new \PDO(
+            'mysql:host=' . self::$dbHost . ';dbname=' . self::$dbName,
+            self::$dbUser, self::$dbPass
         );
+    }
+    
+    public static function tearDownAfterClass()
+    {
+        self::$db = null;
     }
     
     public function testSetToMax()
     {
-        $ip = new Ip('1.1.1.5', $this->connection);
+        $ip = new Ip('1.1.1.5', self::$db);
         $ip->setToMax();
         
-        // A 3-t inkabb konstans legyen
+        // A 3 inkabb konstans legyen
         $this->assertEquals(3, $ip->getCount());
     }
     
     public function testIncrement()
     {
-        $ip = new Ip('1.1.1.2', $this->connection);
+        $ip = new Ip('1.1.1.2', self::$db);
+        
+        $counterBeforeIncrement = $ip->getCount();
         $ip->increment();
         
-        $this->assertEquals(1, $ip->getCount());
+        $this->assertEquals($counterBeforeIncrement+1, $ip->getCount());
+    }
+    
+    public function testIsLimitReached()
+    {
+        // Itt inkabb query-vel legyen a set
+        $ip = new Ip('1.1.1.5', self::$db);
+        $ip->setToMax();
+        
+        $this->assertTrue($ip->isLimitReached());
     }
 }

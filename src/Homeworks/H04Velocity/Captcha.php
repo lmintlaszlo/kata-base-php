@@ -53,7 +53,11 @@
  * - environmentben kene beallitani a db kapcsolatokat,
  *   ez fogna ossze a captchat es a login attempt-et OK
  * - environment teszt
- * - login attempt teszt
+ * - login attempt teszt 
+ * - ne legyenek kulon counterek, csak azert, hogy tudjak a limitjuket,
+ *   inkabb kapjak meg controllerbol a tipust, meg a limitet is
+ * - Environment legyen inkabb controller
+ * - Legyen counter factory
  */
 
 namespace Kata\Homeworks\H04Velocity;

@@ -28,10 +28,10 @@ class Environment
         $ipRange   = new IpRange($request->getIpRange(), $this->connection);
         $ipCountry = new IpCountry($request->getIpCountry(), $this->connection);
         $username  = new Username($request->getUsername(), $this->connection);
-        
+
         $captcha      = new Captcha($ip, $ipCountry, $ipRange, $username);
         $loginAttempt = new LoginAttempt($request->getUsername(), $request->getPassword(), $this->connection);
-        
+
         if (!$loginAttempt->isSuccess())
         {
             if($captcha->isNecessary())
