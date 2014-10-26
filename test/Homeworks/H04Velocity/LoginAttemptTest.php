@@ -1,50 +1,89 @@
 <?php
 
-use PDO;
-use Kata\Homeworks\H04Velocity\Request;
 use Kata\Homeworks\H04Velocity\LoginAttempt;
+use Kata\Homeworks\H04Velocity\Dao\LoginAttemptDao;
 
 class LoginAttemptTest extends \PHPUnit_Framework_TestCase
 {
+    private static $connection;
+    
+    private $request;
+    
     /**
-     * @covers Kata\Homeworks\H04Velocity\LoginAttempt::doLogin
-     * @uses \PDO
-     * @uses \Kata\Homeworks\H04Velocity\LoginData
-     * @uses \Kata\Homeworks\H04Velocity\LoginAttempt
+     * Megnyitom a mysql kapcsolatot, amit a tesz majd vegig hasznalni fog.
      */
-    public function testDoLogin()
+    public static function setUpBeforeClass()
     {
-        try 
+        try
         {
-            $dbHost = 'localhost';
-            $dbName = 'phpunit';
-            $dbUser = 'phpunit';
-            $dbPass = 'phpunit';
-            
-            $connection   = $this->getPdoMock();
-            $loginData    = new Request('pityu', 'pityu', '1.1.1.1', '192.168.4.x', 'Hungary');            
-            $loginAttempt = new LoginAttempt($loginData, $connection);
-            $loginAttempt->isSuccess();
-            
-            
-            $this->assertInstanceOf('\Kata\Homeworks\H04Velocity\LoginAttempt', $loginAttempt);
-            
-        } catch (Exception $ex) {
-            
+            self::$connection = new \PDO('mysql:host=localhost;dbname=phpunit',
+                'phpunit', 'phpunit'
+            );            
+        }
+        catch (Exception $e)
+        {
+            /** @todo: Megkerdezni, hogy ilyenkor mit lehet tenni? */
         }
     }
     
-    private function getPdoMock()
+    /**
+     * Lezarom a kapcsolatot.
+     */
+    public static function teardownAfterClass()
     {
-        $dbHost = 'localhost';
-        $dbName = 'phpunit';
-        $dbUser = 'phpunit';
-        $dbPass = 'phpunit';
+        self::$connection = null;
+    }
+    
+    /**
+     * Minden teszt elott elokeszitem a tablat ami a bejelentkezesi adatokat 
+     * tartalmazza, es osszeallitok egy mock request objektumot.
+     */
+    public function setUp()
+    {
+        $loginAttemptDao = new LoginAttemptDao(self::$connection);
+        $loginAttemptDao->resetTable();
         
-        $pdoMock = $this->getMock('PDO', array(), 
-                array("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass));
+        $this->request = $this->getMock('\Kata\Homeworks\H04Velocity\Request', array(
+           'getUsername', 'getPassword', 'getCountry'),
+           array('pityu', 'pityu', '1.1.1.1', '1.1.1.x', 'hungary'));
         
-        return $pdoMock->expects($this->any())->method('__construct')->will($this->returnSelf());
+        /** @todo Megkerdezni, hogy hogy lehet olyat, hogy a konstruktor parametereiek egyikevel terjen vissza. */
+        $this->request->method('getUsername')->willReturn('pityu');
+        $this->request->method('getPassword')->willReturn('pityu');
+        $this->request->method('getCountry')->willReturn('hungary');
     }
 
+    /**
+     * @covers \Kata\Homeworks\H04Velocity\Dao
+     * @covers \Kata\Homeworks\H04Velocity\LoginAttempt
+     * @covers \Kata\Homeworks\H04Velocity\Request
+     * @covers \Kata\Homeworks\H04Velocity\Dao\LoginAttemptDao
+     */
+    public function testIsSuccess()
+    {
+        $loginAttempt = new LoginAttempt(
+            $this->request->getUsername(),
+            $this->request->getPassword(),
+            self::$connection
+        );
+        
+        $this->assertTrue($loginAttempt->isSuccess());
+    }
+    
+    /**
+     * @covers \Kata\Homeworks\H04Velocity\Dao
+     * @covers \Kata\Homeworks\H04Velocity\LoginAttempt
+     * @covers \Kata\Homeworks\H04Velocity\Request
+     * @covers \Kata\Homeworks\H04Velocity\Dao\LoginAttemptDao
+     */
+    public function testGetCountry()
+    {
+        $loginAttempt = new LoginAttempt(
+            $this->request->getUsername(),
+            $this->request->getPassword(),
+            self::$connection
+        );
+        
+        $this->assertEquals($this->request->getCountry(), $loginAttempt->getCountry());
+    }
 }

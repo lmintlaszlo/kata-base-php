@@ -2,40 +2,28 @@
 
 namespace Kata\Homeworks\H04Velocity;
 
-class LoginAttempt
+use Kata\Homeworks\H04Velocity\Dao\LoginAttemptDao;
+
+class LoginAttempt extends LoginAttemptDao
 {
     private $username;
     private $password;
-    private $connection;
     
     public function __construct($username, $password, \PDO $connection)
     {
         $this->username   = $username;
         $this->password   = $password;
-        $this->connection = $connection;
+        
+        parent::__construct($connection);
     }
     
     public function isSuccess()
     {
-        return ($this->password === $this->getStoredData('password'));
+        return ($this->password === $this->getAStoredPropertyByUsername($this->username, 'password'));
     }
     
-    // Ennek nem itt lenne a helye... talan valami member-ben?
-    public function getStoredData($property = '')
+    public function getCountry()
     {
-        $sql  = "SELECT * FROM login WHERE username = :username";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':username', $this->username);
-        
-        $stmt->execute();
-        $storedData = $stmt->fetch();
-        
-        if(!empty($property) && isset($storedData[$property]))
-        {
-            return $storedData[$property];
-        }
-        
-        return $storedData;
+        return $this->getAStoredPropertyByUsername($this->username, 'country');
     }
-    
 }

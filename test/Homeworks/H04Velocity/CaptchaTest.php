@@ -5,45 +5,68 @@ use Kata\Homeworks\H04Velocity\Captcha;
 
 class CaptchaTest extends \PHPUnit_Framework_TestCase
 {
-    private $dbHost = 'localhost';
-    private $dbName = 'phpunit';
-    private $dbUser = 'phpunit';
-    private $dbPass = 'phpunit';
+    private static $connection;
     
-    private $connection;
-    
-    protected function setUp()
+    /**
+     * Megnyitom a mysql kapcsolatot, amit a tesz majd vegig hasznalni fog.
+     */
+    public static function setUpBeforeClass()
     {
-        $this->connection = new \PDO(
-                "mysql:host=$this->dbHost;dbname=$this->dbName",
-                $this->dbUser, $this->dbPass
-        );
+        try
+        {
+            self::$connection = new \PDO('mysql:host=localhost;dbname=phpunit',
+                'phpunit', 'phpunit'
+            );            
+        }
+        catch (Exception $e)
+        {
+            /** @todo: Megkerdezni, hogy ilyenkor mit lehet tenni? */
+        }
     }
     
     /**
-     * @covers \Kata\Homeworks\H04Velocity\Captcha::isNecessary
+     * Lezarom a kapcsolatot.
+     */
+    public static function teardownAfterClass()
+    {
+        self::$connection = null;
+    }
+    
+    /**
+     * Minden teszt elott elokeszitem a tablat ami a bejelentkezesi adatokat 
+     * tartalmazza, es osszeallitok egy mock request objektumot.
+     */
+    public function setUp()
+    {
+        
+    }
+    
+    /**
+     * @covers \Kata\Homeworks\H04Velocity\Captcha
      * @uses \Kata\Homeworks\H04Velocity\Captcha
      * @uses \Kata\Homeworks\H04Velocity\Counter
+     * @uses \Kata\Homeworks\H04Velocity\Dao
+     * @uses \Kata\Homeworks\H04Velocity\Dao\CounterDao
      * @dataProvider isCaptchaNecessaryProvider
      */
     public function testIsCaptchaNecessary($expectedChaptcaState, $ipReturn,
             $ipCountryReturn, $ipRangeReturn, $usernameReturn
     ) {
         // Mockolom a countereket,hogy azt az erteket adjak majd vissza mit varok
-        $ip = $this->getMock('\Kata\Homeworks\H04Velocity\Ip',
-                array('isLimitReached'), array('', $this->connection));
+        $ip = $this->getMock('\Kata\Homeworks\H04Velocity\Counter\Ip',
+                array('isLimitReached'), array('', self::$connection));
         $ip->method('isLimitReached')->willReturn($ipReturn);
         
-        $ipCountry = $this->getMock('\Kata\Homeworks\H04Velocity\IpCountry',
-                array('isLimitReached'), array('', $this->connection));
+        $ipCountry = $this->getMock('\Kata\Homeworks\H04Velocity\Counter\IpCountry',
+                array('isLimitReached'), array('', self::$connection));
         $ipCountry->method('isLimitReached')->willReturn($ipCountryReturn);
         
-        $ipRange = $this->getMock('\Kata\Homeworks\H04Velocity\IpRange',
-                array('isLimitReached'), array('', $this->connection));
+        $ipRange = $this->getMock('\Kata\Homeworks\H04Velocity\Counter\IpRange',
+                array('isLimitReached'), array('', self::$connection));
         $ipRange->method('isLimitReached')->willReturn($ipRangeReturn);
 
-        $username = $this->getMock('\Kata\Homeworks\H04Velocity\Username',
-                array('isLimitReached'), array('', $this->connection));
+        $username = $this->getMock('\Kata\Homeworks\H04Velocity\Counter\Username',
+                array('isLimitReached'), array('', self::$connection));
         $username->method('isLimitReached')->willReturn($usernameReturn);
         
         $captcha = new Captcha($ip, $ipCountry, $ipRange, $username);

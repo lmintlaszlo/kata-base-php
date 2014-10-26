@@ -62,6 +62,11 @@
 
 namespace Kata\Homeworks\H04Velocity;
 
+use Kata\Homeworks\H04Velocity\Counter\Ip;
+use Kata\Homeworks\H04Velocity\Counter\IpRange;
+use Kata\Homeworks\H04Velocity\Counter\IpCountry;
+use Kata\Homeworks\H04Velocity\Counter\Username;
+
 
 class Captcha
 {    

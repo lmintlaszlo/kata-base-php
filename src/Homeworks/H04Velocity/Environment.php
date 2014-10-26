@@ -38,9 +38,9 @@ class Environment
             {    
                 $ip->increment();
             }
-            elseif($request->getIpCountry() !== $loginAttempt->getStoredData('country'))
+            elseif($request->getIpCountry() !== $loginAttempt->getCountry())
             {
-                $ip->setToMax();
+                $ip->setToLimit();
             }
             else
             {

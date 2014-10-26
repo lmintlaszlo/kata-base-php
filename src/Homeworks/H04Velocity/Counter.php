@@ -2,19 +2,18 @@
 
 namespace Kata\Homeworks\H04Velocity;
 
+use Kata\Homeworks\H04Velocity\Dao\CounterDao;
 
-class Counter
-{
+
+abstract class Counter extends CounterDao
+{    
     protected $limit;
     protected $value;
-    protected $tableName;
-    
-    private $connection;
     
     public function __construct($value, \PDO $connection)
     {
-        $this->value      = $value;
-        $this->connection = $connection;
+        $this->value = $value;
+        parent::__construct($connection, $this->tableName);
     }
     
     /**
@@ -24,54 +23,29 @@ class Counter
      */
     public function isLimitReached()
     {
-        return ($this->getCount() >= $this->limit);
-    }
+        return ($this->getCount($this->value) >= $this->limit);
+    }    
     
     /**
      * Egyel noveli a szamlalo erteket.
      * 
-     * @return void
+     * @return boolean
      */
     public function increment()
     {
-        // Tabla nevvel nem szabad ilyet tenni
-        try
-        {            
-            $sql  = "INSERT INTO " . $this->tableName . " (`value`, `counter`) VALUES (:value, 1)" .
-                    "ON DUPLICATE KEY UPDATE `counter` = `counter` + 1";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':value', $this->value);
-
-            $stmt->execute();
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $this->incrementByValue($this->value);
     }
-    
+
     /**
      * A szamlalo erteket a maximalis ertekre allitja be.
      * 
-     * @return void
+     * @return boolean
      */
-    public function setToMax()
+    public function setToLimit()
     {
-        // Tabla nevvel nem szabad ilyet tenni
-        try
-        {            
-            $sql  = "INSERT INTO " . $this->tableName . " (`value`, `counter`) VALUES (:value, :counter)" .
-                    "ON DUPLICATE KEY UPDATE `counter` = :counter";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':value', $this->value);
-            $stmt->bindParam(':counter', $this->limit);
-
-            $stmt->execute();
-        
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $this->setToLimitByValue($this->value, $this->limit);
     }
-    
-    
+
     /**
      * Visszaadja a szamlalo eppen aktualis erteket.
      * 
@@ -79,21 +53,6 @@ class Counter
      */
     public function getCount()
     {
-        // Tabla nevvel nem szabad ilyet tenni
-        try
-        {    
-            $sql  = "SELECT `counter` FROM " . $this->tableName . 
-                    " WHERE `value` = :value";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':value', $this->value);
-
-            $stmt->execute();
-            
-            $result = $stmt->fetch();
-            
-            return $result['counter'];
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $this->getCountByValue($this->value);
     }
 }

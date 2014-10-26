@@ -1,6 +1,8 @@
 <?php
 
-namespace Kata\Homeworks\H04Velocity;
+namespace Kata\Homeworks\H04Velocity\Counter;
+
+use Kata\Homeworks\H04Velocity\Counter;
 
 
 class Ip extends Counter
