@@ -3,7 +3,7 @@
 use Kata\Homeworks\H04Velocity\Dao\CounterDao;
 
 
-class CounterDaoTest  extends \PHPUnit_Framework_TestCase
+class CounterDaoTest extends \PHPUnit_Framework_TestCase
 {
     private static $connection;
     private $counterDao;
@@ -35,7 +35,7 @@ class CounterDaoTest  extends \PHPUnit_Framework_TestCase
     
     public function setUp()
     {
-        $this->counterDao = new CounterDao(self::$connection);
+        $this->counterDao = new CounterDao(self::$connection, 'ip');
         $this->counterDao->resetTable();
     }
     
@@ -48,69 +48,110 @@ class CounterDaoTest  extends \PHPUnit_Framework_TestCase
 
     public function testResetTable()
     {        
-        $sql = "SELECT COUNT(*) as `sum` FROM `login` WHERE `username` = 'pityu'" .
-               " AND `password` = 'pityu' AND `country` = 'hungary'";
+        $sql = "SELECT COUNT(*) as `sum` FROM `ip`";
         
         $stmt = self::$connection->prepare($sql);
         $stmt->execute();
-        
-        $result = $stmt->fetch();
-        
-        $this->assertEquals(1, $result['sum']);
-    }
-    
-    
-    /**
-     * @dataProvider getStoredPropertiesByUsernameProvider
-     * @param string $username
-     */
-    public function testGetStoredPropertiesByUsername($username)
-    {        
-        $storedProperties = $this->counterDao->
-                getStoredPropertiesByUsername($username);
 
-        /** @todo Szerintem ez itt  mar kod duplikacio */
-        
-        $sql = "SELECT * FROM `login` WHERE `username` = :username";
-        
-        $stmt = self::$connection->prepare($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
         $result = $stmt->fetch();
 
-        $this->assertEquals(array_keys($storedProperties), array_keys($result));
-        $this->assertEquals(array_values($storedProperties), array_values($result));
+        $this->assertEquals(0, $result['sum']);
     }
     
     /**
-     * @dataProvider getAStoredPropertyByUsernameProvider
-     * @param string $username
+     * @param type $incrementNumber
+     * 
+     * @dataProvider incrementByValueProvider
      */
-    public function testGetAStoredPropertyByUsername($username, $property, $expectedValue)
+    public function testIncrementByValue($value, $incrementNumber)
     {
-        $storedProperties = $this->counterDao->getAStoredPropertyByUsername($username, $property);
+        for($i=0; $i<$incrementNumber; $i++)
+        {
+            $this->counterDao->incrementByValue($value);
+        }
+        
+        $sql  = "SELECT `counter` FROM `ip` WHERE value = '" . $value . "'";
+        
+        $stmt = self::$connection->prepare($sql);
+        $stmt->execute();
 
-        $this->assertEquals($expectedValue, $storedProperties);
+        $result = $stmt->fetch();
+
+        $this->assertEquals($incrementNumber, $result['counter']);
+    }
+
+    /**
+     * @param type $value
+     * @param type $limit
+     * 
+     * @dataProvider setToLimitByValueProvider
+     */
+    public function testSetToLimitByValue($value, $limit)
+    {
+        $this->counterDao->setToLimitByValue($value, $limit);
+        
+        $sql  = "SELECT `counter` FROM `ip` WHERE value = '" . $value . "'";
+        
+        $stmt = self::$connection->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+
+        $this->assertEquals($limit, $result['counter']);
+    }
+    
+    /**
+     * @param type $value
+     * @param type $counter
+     * 
+     * @dataProvider getCountByValueProvider
+     */
+    public function testGetCountByValue($value, $counter)
+    {
+        $sql  = "UPDATE `ip` SET `counter` = :counter WHERE `value` = :value";
+        
+        $stmt = self::$connection->prepare($sql);
+        $stmt->bindParam(':counter', $counter);
+        $stmt->bindParam(':value', $value);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+
+        $this->assertEquals($this->counterDao->getCountByValue($value), $result['counter']);
     }
     
     
     /** Data providers */
     
-    public function getStoredPropertiesByUsernameProvider()
+    public function incrementByValueProvider()
     {
         return array(
-            array('pityu'),
+            array('1.2.3.4', 1),
+            array('1.2.3.1', 3),
+            array('1.2.3.2', 5),
+            array('1.2.3.3', 17),
+        );
+    }
+    
+    public function setToLimitByValueProvider()
+    {
+        return array(
+            array('1.2.3.4', 12),
+            array('1.2.3.1', 30),
+            array('1.2.3.2', 75),
+            array('1.2.3.3', 17),
+        );
+    }
+    
+    public function getCountByValueProvider()
+    {
+        return array(
+            array('111.111.111.1', 1),
+            array('111.111.111.4', 27),
+            array('111.111.111.8', 22),
+            array('111.111.113.1', 4),
         );
     }
     
     
-    public function getAStoredPropertyByUsernameProvider()
-    {
-        return array(
-            array('pityu', 'username', 'pityu'),
-            array('pityu', 'password', 'pityu'),
-            array('pityu', 'country', 'hungary'),
-            array('pityu', 'nincsilyen', null),
-        );
-    }
 }

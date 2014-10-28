@@ -3,7 +3,7 @@
 use Kata\Homeworks\H04Velocity\Dao\LoginAttemptDao;
 
 
-class LoginAttemptDaoTest  extends \PHPUnit_Framework_TestCase
+class LoginAttemptDaoTest extends \PHPUnit_Framework_TestCase
 {
     private static $connection;
     private $loginAttemptDao;

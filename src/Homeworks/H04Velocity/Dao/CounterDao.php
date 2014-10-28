@@ -30,20 +30,12 @@ class CounterDao extends Dao
      */
     public function incrementByValue($value)
     {
-        try
-        {            
-            $sql  = "INSERT INTO " . $this->tableName . " (`value`) VALUES (:value)" .
-                    "ON DUPLICATE KEY UPDATE `counter` = `counter` + 1";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':value', $value);
-            $stmt->execute();
-            
-            return true;
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
+        $sql  = "INSERT INTO " . $this->tableName . " (`value`) VALUES (:value)" .
+                "ON DUPLICATE KEY UPDATE `counter` = `counter` + 1";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':value', $value);
+
+        return $stmt->execute();
     }
 
     /**
@@ -55,23 +47,14 @@ class CounterDao extends Dao
      * @return boolean
      */
     public function setToLimitByValue($value, $limit)
-    {
-        try
-        {            
-            $sql  = "INSERT INTO " . $this->tableName . " (`value`, `counter`) VALUES (:value, :counter)" .
-                    "ON DUPLICATE KEY UPDATE `counter` = :counter";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':value', $value);
-            $stmt->bindParam(':counter', $limit);
+    {            
+        $sql  = "INSERT INTO " . $this->tableName . " (`value`, `counter`) VALUES (:value, :counter)" .
+                "ON DUPLICATE KEY UPDATE `counter` = :counter";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':value', $value);
+        $stmt->bindParam(':counter', $limit);
 
-            $stmt->execute();
-            
-            return true;            
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
+        return $stmt->execute();
     }
 
     /**
@@ -83,24 +66,16 @@ class CounterDao extends Dao
      */
     public function getCountByValue($value)
     {
-        try
-        {    
-            $sql  = "SELECT `counter` FROM " . $this->tableName . 
-                    " WHERE `value` = :value";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':value', $value);
+        $sql  = "SELECT `counter` FROM " . $this->tableName . 
+                " WHERE `value` = :value";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':value', $value);
 
-            $x = $stmt->execute();
-            
-            $result = $stmt->fetch();
+        $x = $stmt->execute();
 
-            return $result['counter'];
-            
-        }
-        catch (Exception $e)
-        {
-            return -1;
-        }
+        $result = $stmt->fetch();
+
+        return $result['counter'];
     }
     
     /**
