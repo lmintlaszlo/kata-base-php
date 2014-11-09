@@ -26,11 +26,7 @@ class ProductDao {
     public function getByEan($ean)
     {
 	$sth = $this->pdo->prepare("SELECT * FROM product WHERE ean = :ean");
-	$sth->execute(
-	    array(
-		':ean' => $ean,
-	    )
-	);
+	$sth->execute(array(':ean' => $ean));
 
 	$rows = $sth->fetchAll();
 	if (count($rows) > 0)
@@ -45,7 +41,7 @@ class ProductDao {
 	    return $product;
 	}
 
-	return new NullProduct;
+	return new NullProduct();
     }
 
     /**
@@ -82,44 +78,49 @@ class ProductDao {
     /**
      * Create product in database if the EAN is not existing.
      *
-     * @param Product $product
-     * @return bool
+     * @param Product $product  Product to be created
+     * 
+     * @return boolean
+     * 
+     * @throws ProductException
      */
     public function create(Product $product)
     {
+        $this->checkNullProduct($product, 'create');
+
 	if (self::checkUnique($product->ean))
 	{
 	    $sth = $this->pdo->prepare("
-		INSERT INTO product
-		    (ean, name)
-		VALUES
-		    (:ean, :name)
+		INSERT INTO product (ean, name) VALUES (:ean, :name)
 	    ");
 
-	    $sth->execute(
-		array(
+	    $sth->execute(array(
 		    ':ean' => $product->ean,
 		    ':name' => $product->name,
-		)
-	    );
+            ));
+            
 	    return true;
 	}
-	else
-	{
-	    return false;
-	}
+        
+        return false;
     }
 
     /**
      * Modify the product name and ean in database by id.
      * It checks if the EAN already exists by another product, and does not overwrite.
      *
-     * @param Product $product
-     * @return bool
+     * @param Product $product  Product to be modified
+     * 
+     * @return boolean
+     * 
+     * @throws ProductException
      */
     public function modify(Product $product)
     {
-	if (self::checkUnique($product->ean))
+        $this->checkNullProduct($product, 'modify');
+        $this->checkId($product);
+
+        if (self::checkUnique($product->ean))
 	{
 	    $sth = $this->pdo->prepare("
 		UPDATE product
@@ -129,32 +130,32 @@ class ProductDao {
 		WHERE id = :id
 	    ");
 
-	    $sth->execute(
-		array(
-		    ':id' => $product->id,
-		    ':ean' => $product->ean,
-		    ':name' => $product->name,
-		)
-	    );
+	    return $sth->execute(array(
+                ':id'   => $product->id,
+                ':ean'  => $product->ean,
+                ':name' => $product->name,
+            ));
 	}
-	return true;
+        
+	return false;
     }
 
     /**
      * Delete product from database
      *
      * @param Product $product
-     * @return bool
+     * 
+     * @return boolean
+     * 
+     * @throws ProductException
      */
     public function delete(Product $product)
     {
-	$sth = $this->pdo->prepare("DELETE FROM product WHERE id = :id");
-
-	$sth->execute(
-	    array(
-		':id' => $product->id,
-	    )
-	);
+        $this->checkNullProduct($product, 'delete');
+        $this->checkId($product);
+        
+        $sth = $this->pdo->prepare("DELETE FROM product WHERE id = :id");
+        $sth->execute(array(':id' => $product->id));
 
 	return true;
     }
@@ -162,23 +163,41 @@ class ProductDao {
     /**
      * Check if the product will be unique by EAN
      *
-     * @param $ean
-     * @return bool
+     * @param string $ean  The ean to validate
+     * 
+     * @return boolean
      */
     private function checkUnique($ean)
-    {
-	$sth = $this->pdo->prepare("SELECT COUNT(1) FROM product WHERE ean = :ean");
-	$sth->execute(
-	    array(
-		':ean' => $ean,
-	    )
-	);
+    {        
+	$sth = $this->pdo->prepare("SELECT count(*) AS `sum` FROM product WHERE ean = :ean");
+	$sth->execute(array(':ean' => $ean));
 
 	$countRow = $sth->fetch();
-	if ($countRow[0] > 0)
-	{
-	    return false;
-	}
-	return true;
+        
+        return ($countRow['sum'] == 0);
+    }
+    
+    /**
+     * Check if a product is NullProduct.
+     * 
+     * @param Product $product  Product to check
+     * @param string  $action   Action to be done with the product
+     * 
+     * @throws ProductException
+     */
+    private function checkNullProduct(Product $product, $action)
+    {
+        if ($product instanceof NullProduct)
+        {
+            throw new ProductIsNullException('Can not ' . $action . ' not existing product!');
+        }
+    }
+    
+    private function checkId(Product $product)
+    {
+        if(empty($product->id))
+        {
+            throw new ProductMissingIdException('Id of product must be set!');
+        }
     }
 }

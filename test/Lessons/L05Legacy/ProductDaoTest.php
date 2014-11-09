@@ -1,24 +1,26 @@
 <?php
 
 use Kata\Lessons\L05Legacy\Product;
+use Kata\Lessons\L05Legacy\NullProduct;
 use Kata\Lessons\L05Legacy\ProductDao;
 
-define('PRODUCTION_DATABASE_FILE', './product.db');
 
-class ProductDaoTest
+class ProductDaoTest extends PHPUnit_Framework_TestCase
 {
+    const TEST_DATABASE_FILE = 'product.db';
+    
     private static $connection;
+    
     private $productDao;
     
     /**
-     * Megnyitom a mysql kapcsolatot, amit a tesz majd vegig hasznalni fog.
+     * Creates a db connection for the whole test.
      */
     public static function setUpBeforeClass()
     {
         try
         {
-            $dsn = sprintf("sqlite:%s", PRODUCTION_DATABASE_FILE);
-	    self::$connection = new PDO($dsn);
+            self::$connection = new PDO("sqlite:".realpath(dirname(__FILE__) . '/'.self::TEST_DATABASE_FILE));
 	    self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         catch (Exception $e)
@@ -28,117 +30,314 @@ class ProductDaoTest
     }
     
     /**
-     * Lezarom a kapcsolatot.
+     * Closes the db connection.
      */
     public static function teardownAfterClass()
     {
         self::$connection = null;
     }
     
-    public function setUp()
+    /**
+     * Creates a ProductDao instance
+     */
+    protected function setUp()
     {
         $this->productDao = new ProductDao(self::$connection);
     }
     
     
-    public function tearDown()
+    /**
+     * Testing the getByEan method for receiving NullProduct.
+     */
+    public function testGetByEanNullProduct()
     {
-        $this->productDao = null;
+        $notExistingEan = '011110';
+        
+        $this->directDeleteByEan($notExistingEan);
+        
+        $product = $this->productDao->getByEan($notExistingEan);
+                
+        $this->assertInstanceOf('\Kata\Lessons\L05Legacy\NullProduct', $product);        
     }
     
     /**
-     * @dataProvider getByEanProvider
-     * @param string $ean
+     * Testing the getByEan method for receiving Product.
      */
-    public function testGetByEan($ean)
+    public function testGetByEanProduct()
     {
-        $product = $this->productDao->getByEan($ean);
+        $newEan  = '011110';
+        $newName = 'Test';
         
-        $sth = $this->pdo->prepare("SELECT * FROM product WHERE ean = :ean");
-	$sth->execute(array(':ean' => $ean));
-
-	$row = $sth->fetch();
-        
-        $this->assertEquals($row['ean'], $product->ean);
-        
+        $this->directDeleteByEan($newEan);
+        $this->directInsert($newEan, $newName);
+                
+        $product = $this->productDao->getByEan($newEan);
+                
+        $this->assertInstanceOf('\Kata\Lessons\L05Legacy\Product', $product);        
+        $this->assertEquals($newEan, $product->ean);        
+        $this->assertEquals($newName, $product->name);        
     }
     
     /**
-     * @dataProvider getByIdDataProvider
-     * @param int $id
+     * Testing the getById method for receiving NullProduct.
      */
-    public function testGetById($id)
+    public function testGetByIdNullProduct()
     {
-        $product = $this->productDao->getById($id);
+        $notExistingId = 1000;
         
-        $sth = $this->pdo->prepare("SELECT * FROM product WHERE id = :id");
-	$sth->execute(array(':id' => $id));
-
-	$row = $sth->fetch();
+        $this->directDeleteById($notExistingId);
         
-        $this->assertEquals($row['id'], $product->id);
+        $product = $this->productDao->getById($notExistingId);
+                
+        $this->assertInstanceOf('\Kata\Lessons\L05Legacy\NullProduct', $product);        
     }
     
-    
-    public function testCreate()
+    /**
+     * Testing the getById method for receiving Product.
+     */
+    public function testGetByIdProduct()
     {
-        /** Ez mehetne provider-be */
+        $newEan  = '011110';
+        $newName = 'Test';
+        
+        $this->directDeleteByEan($newEan);
+        
+        $insertId = $this->directInsert($newEan, $newName);
+        
+        $product = $this->productDao->getById($insertId);
+                
+        $this->assertInstanceOf('\Kata\Lessons\L05Legacy\Product', $product);        
+        $this->assertEquals($newEan, $product->ean);        
+        $this->assertEquals($newName, $product->name);        
+    }
+    
+    /**
+     * Testing the create method with ProductIsNullException.
+     * 
+     * @expectedException \Kata\Lessons\L05Legacy\ProductIsNullException
+     */
+    public function testCreateWithException()
+    {
+        $product = new NullProduct();
+        
+        $this->productDao->create($product);
+    }
+    
+    /**
+     * Testing the create method with uniq EAN.
+     */
+    public function testCreateUniq()
+    {
+        $newEan  = '011110';
+        $newName = 'Test';
+        
+        $this->directDeleteByEan($newEan);
+        
+        $newProduct = new Product();
+        $newProduct->ean  = $newEan;
+        $newProduct->name = $newName;
+        
+        $this->assertTrue($this->productDao->create($newProduct));
+    }
+    
+    /**
+     * Testing the create method with not uniq EAN.
+     */
+    public function testCreateNotUniq()
+    {
+        $newEan  = '011110';
+        $newName = 'Test';
+        
+        $this->directDeleteByEan($newEan);
+        $this->directInsert($newEan, $newName);
+        
+        $newProduct = new Product();
+        $newProduct->ean  = $newEan;
+        $newProduct->name = $newName;
+        
+        $this->assertFalse($this->productDao->create($newProduct));
+    }
+    
+    /**
+     * Testing the modify method with ProductIsNullException.
+     * 
+     * @expectedException \Kata\Lessons\L05Legacy\ProductIsNullException
+     */
+    public function testModifyWithIsNullException()
+    {
+        $product = new NullProduct();
+        
+        $this->productDao->modify($product);
+    }
+    
+    /**
+     * Testing the modify method with ProductMissingIdException.
+     * 
+     * @expectedException \Kata\Lessons\L05Legacy\ProductMissingIdException
+     */
+    public function testModifyWithMissingIdException()
+    {
+        $newEan  = '011110';
+        $newName = 'Test';
+        $newEanForModification = '0115110';
+        
+        $this->directDeleteByEans(array($newEan, $newEanForModification));       
+        $this->directInsert($newEan, $newName);
+        
+        $newProduct = new Product();
+        $newProduct->id   = null;
+        $newProduct->ean  = $newEanForModification;
+        $newProduct->name = $newName;
+        
+        $this->productDao->modify($newProduct);
+    }
+    
+    /**
+     * Testing the modify method with uniq EAN. 
+     */
+    public function testModifyUniq()
+    {
+        $newEan  = '011110';
+        $newName = 'Test';
+        $newEanForModification = '0115110';
+        
+        $this->directDeleteByEans(array($newEan, $newEanForModification));        
+        $insertId = $this->directInsert($newEan, $newName);
+        
+        
+        $newProduct = new Product();
+        $newProduct->id   = $insertId;
+        $newProduct->ean  = $newEanForModification;
+        $newProduct->name = $newName;
+        
+        
+        $this->assertTrue($this->productDao->modify($newProduct));
+    }
+    
+    /**
+     * Testing the modify method with not uniq EAN.
+     */
+    public function testModifyNotUniq()
+    {
+        $newEan  = '011110';
+        $newName = 'Test';
+        
+        $this->directDeleteByEan($newEan);
+        $insertId = $this->directInsert($newEan, $newName);        
+        
+        $newProduct = new Product();
+        $newProduct->id   = $insertId;
+        $newProduct->ean  = $newEan;
+        $newProduct->name = $newName;
+        
+        $this->assertFalse($this->productDao->modify($newProduct));
+    }
+    
+    /**
+     * Testing the delete method with ProductIsNullException.
+     * 
+     * @expectedException \Kata\Lessons\L05Legacy\ProductIsNullException
+     */
+    public function testDeleteWithIsNullException()
+    {
+        $product = new NullProduct();
+        
+        $this->productDao->delete($product);
+    }
+    
+    /**
+     * Testing the delete method with ProductMissingIdException.
+     * 
+     * @expectedException \Kata\Lessons\L05Legacy\ProductMissingIdException
+     */
+    public function testDeleteWithMissingIdException()
+    {
+        $newEan  = '011110';
+        $newName = 'Test';
+        
+        $this->directDeleteByEan($newEan);
+        $this->directInsert($newEan, $newName);
+        
         $product = new Product();
-        $product->ean  = '1001AS11';
-        $product->name = 'Horse';
+        $product->id   = null;
+        $product->ean  = $newEan;
+        $product->name = $newName;
         
-        $this->assertTrue($this->productDao->create($product));
+        $this->assertTrue($this->productDao->delete($product));
     }
     
-    public function testModify()
-    {
-        /** Ez mehetne provider-be */
-        $product = new Product();
-        $product->id   = 10;
-        $product->ean  = '2222FSDFGw322';
-        $product->name = 'Horse modified';
-        
-        /** 
-         * Mivel a modify mindig true-t ad vissza ezert sql-t kene irni, 
-         * hogy tenyleg modosult-e.
-         */
-        $this->assertTrue($this->productDao->modify($product));
-    }
-    
+    /**
+     * Testing the delete method.
+     */
     public function testDelete()
     {
-        /** Ez mehetne provider-be */
+        $newEan  = '011110';
+        $newName = 'Test';
+        
+        $this->directDeleteByEan($newEan);
+        $insertId = $this->directInsert($newEan, $newName);
+        
         $product = new Product();
-        $product->id   = 10;
-        $product->ean  = '2222FSDFGw322';
-        $product->name = 'Horse modified';
+        $product->id   = $insertId;
+        $product->ean  = $newEan;
+        $product->name = $newName;
         
-        /** 
-         * Mivel a delete mindig true-t ad vissza ezert sql-t kene irni, 
-         * hogy tenyleg torolve van-e.
-         */
         $this->assertTrue($this->productDao->delete($product));
+    }
+    
+    /**
+     * Inserts a product to the db without using DAO.
+     * 
+     * @param string $ean   Ean of the product
+     * @param string $name  Name of the product
+     * @return type
+     */
+    private function directInsert($ean, $name)
+    {
+        $insertStmnt = self::$connection->prepare(
+            'INSERT INTO product (ean, name) VALUES (:ean, :name)'
+        );
         
+        $insertStmnt->execute(array(
+            ':ean'  => $ean,
+            ':name' => $name,
+        ));
+        
+        return self::$connection->lastInsertId();
     }
     
-    
-    /** Data providers */
-    
-    public function getByEanDataProvider()
+    /**
+     * Deletes by EAN directly from the db without using DAO.
+     * 
+     * @param string $ean  EAN to be deleted
+     */
+    private function directDeleteByEan($ean)
     {
-        return array(
-            array('nemtom'),
-            array('valami'),
-            array('barmi'),
-        );
+        $stmnt = self::$connection->prepare('DELETE FROM `product` WHERE `ean` = :ean');
+        $stmnt->execute(array(':ean' => $ean));
     }
     
-    public function getByIdDataProvider()
+    /**
+     * Deletes by multiple EANs.
+     * 
+     * @param array $eans  EANs to be deleted
+     */
+    private function directDeleteByEans(array $eans)
     {
-        return array(
-            array(1),
-            array(5),
-            array(2),
-        );
+        foreach($eans as $ean)
+        {
+            $this->directDeleteByEan($ean);
+        }
+    }
+    
+    /**
+     * Deletes by id directly from the db without using DAO.
+     * 
+     * @param type $id  Id to be deleted
+     */
+    private function directDeleteById($id)
+    {
+        $stmnt = self::$connection->prepare('DELETE FROM `product` WHERE `id` = :id');
+        $stmnt->execute(array(':id' => $id));
     }
 }
