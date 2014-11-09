@@ -12,7 +12,7 @@ class ProductDao {
      */
     private $pdo;
     
-    public function construct(\Pdo $pdo)
+    public function __construct(\Pdo $pdo)
     {
         $this->pdo = $pdo;
     }    
