@@ -142,7 +142,6 @@ class IpTest extends \PHPUnit_Framework_TestCase
             array(1),
             array(3),
             array(5),
-            array(17),
         );
     }
     
