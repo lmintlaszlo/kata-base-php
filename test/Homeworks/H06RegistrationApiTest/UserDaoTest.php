@@ -9,6 +9,7 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
     const TEST_PASSWORD = 'asdf1234';
     
     private static $connection;
+    
     private $userDao;
     
     /**
@@ -40,10 +41,10 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->userDao = new UserDao(self::$connection);
-        self::$connection->query("TRUNCATE TABLE `reqistration_api_users`"); 
+        self::$connection->query("TRUNCATE TABLE `" . $this->userDao->tableName . "`");
     }
     
-    public function teststore()
+    public function testStore()
     {
         $user = new User();
         $user->username      = self::TEST_USERNAME;
@@ -52,8 +53,8 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
         
         $storeResult = $this->userDao->store($user);
         
-        $selectedUser = $this->directSelectByUsername($user->username);
-        
+        $selectedUser = $this->directSelectByUsername($user);
+
         $this->assertTrue($storeResult);
         $this->assertEquals($user->passwordHash, $selectedUser->password_hash);
     }
@@ -61,7 +62,7 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Kata\Homeworks\H06RegistrationApi\UserExistsException
      */
-    public function teststoreWithNotUniqUsername()
+    public function testStoreWithNotUniqUsername()
     {
         $user = new User();
         $user->username      = self::TEST_USERNAME;
@@ -69,13 +70,16 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
         $user->passwordHash  = sha1($user->passwordPlain);
         
         $this->directInsert($user);
-        
+
         $this->userDao->store($user);
     }
 
     public function directSelectByUsername(User $user)
     {
-        $sth = self::$connection->prepare("SELECT * FROM `users` WHERE `username` = :username");
+        $sth = self::$connection->prepare(
+            "SELECT * FROM `" . $this->userDao->tableName . "`" .
+            " WHERE `username` = :username"
+        );
 	$sth->execute(array(':username' => $user->username));
 	
         return $sth->fetch(PDO::FETCH_OBJ);
@@ -85,8 +89,8 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
     private function directInsert(User $user)
     {
         $insertStmnt = self::$connection->prepare(
-            'INSERT INTO `users` (`username`, `password_hash`)' .
-            'VALUES (:username, :passwordHash)'
+            "INSERT INTO `" . $this->userDao->tableName . "` (`username`, `password_hash`)" .
+            "VALUES (:username, :passwordHash)"
         );
         
         $insertStmnt->execute(array(

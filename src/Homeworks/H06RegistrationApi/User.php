@@ -2,7 +2,7 @@
 
 namespace Kata\Homeworks\H06RegistrationApi;
 
-class User extends UserDao
+class User
 {
     public $username;
     public $passwordHash;
