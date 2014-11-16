@@ -6,6 +6,9 @@ use Kata\Homeworks\H04Velocity\Dao\LoginAttemptDao;
 
 class LoginAttempt extends LoginAttemptDao
 {
+    const LOGIN_RESULT_SUCCESS   = true;
+    const LOGIN_RESULT_UNSUCCESS = false;
+    
     private $username;
     private $password;
     

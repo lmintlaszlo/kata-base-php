@@ -43,9 +43,10 @@ class LoginAttemptTest extends \PHPUnit_Framework_TestCase
         $loginAttemptDao = new LoginAttemptDao(self::$connection);
         $loginAttemptDao->resetTable();
         
-        $this->request = $this->getMock('\Kata\Homeworks\H04Velocity\Request', array(
-           'getUsername', 'getPassword', 'getCountry'),
-           array('pityu', 'pityu', '1.1.1.1', '1.1.1.x', 'hungary'));
+        $this->request = $this->getMock('\Kata\Homeworks\H04Velocity\Request',
+            array('getUsername', 'getPassword', 'getCountry'),
+            array('pityu', 'pityu', '1.1.1.1', '1.1.1.x', 'hungary')
+        );
         
         /** @todo Megkerdezni, hogy hogy lehet olyat, hogy a konstruktor parametereiek egyikevel terjen vissza. */
         $this->request->method('getUsername')->willReturn('pityu');

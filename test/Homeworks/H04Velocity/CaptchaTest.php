@@ -81,9 +81,24 @@ class CaptchaTest extends \PHPUnit_Framework_TestCase
     public function isCaptchaNecessaryProvider()
     {
         return array(
-            array(true, false, false, false, true),
-            array(true, false, false, true, true),
-            array(true, false, true, false, true),
+            array(true,  true, true, true, true),
+            array(true,  true, true, true, false),
+            array(true,  true, true, false, true),
+            array(true,  true, true, false, false),
+             
+            array(true,  true, false, true, true),
+            array(true,  true, false, true, false),
+            array(true,  true, false, false, true),
+            array(true,  true, false, false, false),
+             
+            array(true,  false, true, true, true),
+            array(true,  false, true, true, false),
+            array(true,  false, true, false, true),
+            array(true,  false, true, false, false),
+             
+            array(true,  false, false, true, true),
+            array(true,  false, false, true, false),
+            array(true,  false, false, false, true),            
             array(false, false, false, false, false),
         );
     }
