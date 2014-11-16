@@ -120,7 +120,10 @@ class ProductDao {
         $this->checkNullProduct($product, 'modify');
         $this->checkId($product);
 
-        if (self::checkUnique($product->ean))
+        $previousProduct = $this->getById($product->id);
+        $eanNotChanged   = ($previousProduct->ean == $product->ean);
+        
+        if ($eanNotChanged || self::checkUnique($product->ean))
 	{
 	    $sth = $this->pdo->prepare("
 		UPDATE product
