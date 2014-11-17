@@ -2,7 +2,7 @@
 
 use Kata\Homeworks\H06RegistrationApi\Validator;
 
-class ValidatorTest
+class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
     const USERNAME_VALID                = 'johndoe1';    
     const USERNAME_TOO_SHORT            = 'doe';
@@ -29,7 +29,7 @@ class ValidatorTest
      */
     public function testIsValidUsername($expectedResult, $username)
     {
-        $this->assertEquals($expectedResult, $this->validator->usernameCheck($username));
+        $this->assertEquals($expectedResult, $this->validator->isValidUsername($username));
     }
     
     
@@ -48,7 +48,7 @@ class ValidatorTest
             array(self::RESULT_ERROR, self::USERNAME_ONLY_CAPITAL_LETTERS),
             array(self::RESULT_ERROR, self::USERNAME_SPECIAL_CHARACTER),
             array(self::RESULT_ERROR, self::USERNAME_TOO_SHORT),
-            array(self::RESULT_ERROR, str_repeat(self::USERNAME_VALID, 15)),
+            array(self::RESULT_ERROR, str_repeat(self::USERNAME_VALID, 20)),
         );
     }
 }
