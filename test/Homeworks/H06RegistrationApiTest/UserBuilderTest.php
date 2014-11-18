@@ -13,7 +13,7 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @dataProvider buildFromUsernameAndPass
+     * @dataProvider buildFromUsernameAndPassProvider
      * @param type $username
      * @param type $password
      */
@@ -46,10 +46,23 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
         );
     }
     
-    
+    /**
+     * @dataProvider buildFromUsernameProvider
+     * @param type $username
+     */
     public function testBuildFromUsername($username)
     {
-        $user = $this->userBuilder->buildFromUsername($username);
+        
+        $generator = $this->getMock(
+            '\Kata\Homeworks\H06RegistrationApi\Generator',
+            array('generate')
+        );
+        
+        $generator->expects($this->once())
+                ->method('generate')
+                ->willReturn(md5(microtime()));
+        
+        $user = $this->userBuilder->buildFromUsername($username, $generator);
         
         $this->assertInstanceOf(
             'Kata\Homeworks\H06RegistrationApi\User',
@@ -78,7 +91,7 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
     
     /** Data providers */
     
-    public function buildFromUsernameAndPass()
+    public function buildFromUsernameAndPassProvider()
     {
         return array(
             array('John Doe',         'joe33'),
@@ -87,8 +100,8 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
         );
     }
     
-    public function buildFromUsername()
-    {
+    public function buildFromUsernameProvider()
+    {        
         return array(
             array('John Doe'),
             array('Boyce Goodkap'),

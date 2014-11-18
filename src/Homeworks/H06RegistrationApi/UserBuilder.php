@@ -18,6 +18,17 @@ class UserBuilder
         return $user;
     }
     
+    public function buildFromUsername($username, Generator $generator)
+    {
+        $password = $generator->generate();
+        
+        $user = new User();
+        $user->username      = $username;
+        $user->passwordPlain = $password;
+        $user->passwordHash  = $this->generateSaltedHash($password);
+        
+        return $user;
+    }
     
     private function generateSaltedHash($password)
     {
