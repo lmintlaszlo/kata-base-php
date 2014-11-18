@@ -21,9 +21,10 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->userBuilder->buildFromUsernameAndPass($username, $password);
         
-        $this->assertEquals($username, $user->username);
-        $this->assertEquals($password, $user->password);
         $this->assertInstanceOf('Kata\Homeworks\H06RegistrationApi\User', $user);
+        $this->assertEquals($username, $user->username, 'Username is not the same.');
+        $this->assertEquals($password, $user->passwordPlain, 'Password is not the same.');
+        $this->assertRegExp('/[a-z0-9]{32}/', $user->passwordHash, 'Passwordhash is not MD5 hash.');
     }
     
     
