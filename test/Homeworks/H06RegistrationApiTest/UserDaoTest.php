@@ -55,7 +55,7 @@ class UserDaoTest extends \PHPUnit_Framework_TestCase
         
         $selectedUser = $this->directSelectByUsername($user);
 
-        $this->assertTrue($storeResult);
+        $this->assertTrue($storeResult > 0);
         $this->assertEquals($user->passwordHash, $selectedUser->password_hash);
     }
     

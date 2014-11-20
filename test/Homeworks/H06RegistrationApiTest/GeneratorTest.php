@@ -11,8 +11,34 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $this->generator = new Generator();
     }
     
-    public function testGenerator()
+    public function testGetPassword()
     {
-        $this->assertRegExp('/[a-z0-9]{32}/', $this->generator->generate());
+        $password = $this->generator->getPassword();
+        $passwordLength = strlen($password);
+        
+        $this->assertNotEmpty($password);
+        $this->assertInternalType('string', $password);
+        $this->assertTrue($passwordLength > 7);
+        $this->assertTrue($passwordLength < 17);
     }
+    
+    public function testGetSaltedHash()
+    {
+        $saltedHash = $this->generator->getSaltedHash();
+        
+        $this->assertNotEmpty($saltedHash);
+        $this->assertInternalType('string', $saltedHash);
+        $this->assertEquals(40, strlen($saltedHash));
+    }
+    
+    public function testGenerateSaltedHashFromPlain()
+    {
+        $saltedHash = $this->generator->generateSaltedHashFromPlain('sd');
+        
+        $this->assertNotEmpty($saltedHash);
+        $this->assertInternalType('string', $saltedHash);
+        $this->assertEquals(40, strlen($saltedHash));
+    }
+    
+    
 }

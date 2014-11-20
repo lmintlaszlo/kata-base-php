@@ -1,3 +1,10 @@
 Kommentezni
 Password regex-et kiegesziteni specialis karakterekkel
 User legyen kontrolleres
+SaltedHash ne az UserBuilderben lgyen hanem a Generatorban
+Validator dobaljon sajat tipusu kulonbozo exceptionoket OK
+Validator ne static legyen OK
+Validator kapjon egy request objektumot
+Controller try-al mukodjon, es a catch-ektol fuggjon a ressponse allapota
+Lehetne valami preController, hogy ne legyen annyik kodduplikacio a kontroller metodusokba
+Response tesztet megirni, hogy dependeljenek egymasra

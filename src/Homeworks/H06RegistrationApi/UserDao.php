@@ -13,19 +13,24 @@ class UserDao extends Dao
     {
         if ($this->usernameWillBeUniq($user->username))
         {
-            return $this->insert($user);
+            if (!$this->insert($user->username, $user->passwordHash))
+            {
+                return 0;
+            }
+            
+            return $this->connection->lastInsertId();
         }
         
         throw new UserExistsException('Username already exists!');
     }
 
-    private function insert(User $user)
+    private function insert($username, $passwordHash)
     {
         $sql  = "INSERT INTO `" . $this->tableName . "` (`username`, `password_hash`)" .
-                "VALUES (:username, :password)";
+                "VALUES (:username, :passwordHash)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':username', $user->username);
-        $stmt->bindParam(':password', $user->passwordHash);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':passwordHash', $passwordHash);
 
         return $stmt->execute();
     }

@@ -1,6 +1,7 @@
 <?php
 
-use \Kata\Homeworks\H06RegistrationApi\UserBuilder;
+use Kata\Homeworks\H06RegistrationApi\UserBuilder;
+use Kata\Homeworks\H06RegistrationApi\Generator;
 
 class UserBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,33 +18,29 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
      * @param type $username
      * @param type $password
      */
-    public function testBuildFromUsernameAndPassword($username, $password)
-    {
-        $user = $this->userBuilder->buildFromUsernameAndPass($username, $password);
+    public function testBuildFromUsernameAndPassword($username, $password) {
         
-        $this->assertInstanceOf(
-            'Kata\Homeworks\H06RegistrationApi\User',
-            $user,
-            'Generated is not instance of User'
+        $generator = $this->getMock(
+            '\Kata\Homeworks\H06RegistrationApi\Generator',
+            array('generateSaltedHashFromPlain')
         );
         
-        $this->assertEquals(
-            $username,
-            $user->username,
-            'Username is not the same.'
-        );
+        $generator->expects($this->once())
+            ->method('generateSaltedHashFromPlain')
+            ->willReturn(sha1($password.Generator::SALT)); // sha1 miatt mindegy
         
-        $this->assertEquals(
-            $password,
-            $user->passwordPlain,
-            'Password is not the same.'
-        );
+        $user = $this->userBuilder
+            ->buildFromUsernameAndPass(
+                $username,
+                $password,
+                $generator
+            );
         
-        $this->assertRegExp(
-            '/[a-z0-9]{32}/',
-            $user->passwordHash,
-            'Passwordhash is not MD5 hash.'
-        );
+        $this->assertInstanceOf('Kata\Homeworks\H06RegistrationApi\User', $user);        
+        $this->assertEquals($username, $user->username);        
+        $this->assertEquals($password, $user->passwordPlain);        
+        $this->assertInternalType('string', $user->passwordHash);
+        $this->assertNotEmpty($user->passwordHash);
     }
     
     /**
@@ -51,16 +48,14 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
      * @param type $username
      */
     public function testBuildFromUsername($username)
-    {
-        
+    {        
         $generator = $this->getMock(
             '\Kata\Homeworks\H06RegistrationApi\Generator',
-            array('generate')
+            array('getPassword', 'getSaltedHash')
         );
         
-        $generator->expects($this->once())
-                ->method('generate')
-                ->willReturn(md5(microtime()));
+        $generator->expects($this->once())->method('getPassword')->willReturn('asd12a');
+        $generator->expects($this->once())->method('getSaltedHash')->willReturn(sha1('asd12a'.Generator::SALT));
         
         $user = $this->userBuilder->buildFromUsername($username, $generator);
         
@@ -76,16 +71,10 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
             'Username is not the same.'
         );
         
-        $this->assertNotEmpty(
-            $user->passwordPlain,
-            'Password is not generated.'
-        );
-        
-        $this->assertRegExp(
-            '/[a-z0-9]{32}/',
-            $user->passwordHash,
-            'Passwordhash is not MD5 hash.'
-        );
+        $this->assertInternalType('string', $user->passwordPlain);
+        $this->assertInternalType('string', $user->passwordHash);
+        $this->assertNotEmpty($user->passwordPlain);
+        $this->assertNotEmpty($user->passwordHash);
     }
     
     

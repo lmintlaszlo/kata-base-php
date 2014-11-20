@@ -10,12 +10,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     const USERNAME_ONLY_CAPITAL_LETTERS = 'JOHNDOE';
     const USERNAME_SPECIAL_CHARACTER    = 'johndoe1_';
     
-    const PASSWORD_VALID        = 'asdasd';
-    const PASSWORD_TOO_SHORT    = 'asdas';
-    const PASSWORD_FOR_MISMATCH = 'sasdas';
-
-    const RESULT_OK    = true;
-    const RESULT_ERROR = false;
+    const PASSWORD_VALID             = 'asdasd';
+    const PASSWORD_TOO_SHORT         = 'asdas';
+    const PASSWORD_INVALID_CHARACTER = 'sasdsdf-';
+    const PASSWORD_FOR_MISMATCH      = 'sasd';
+    const PASSWORD_FOR_MISMATCH_2    = 'qweerewqqqqqqqqqq';
     
     
     private $validator;
@@ -25,54 +24,75 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator = new Validator();
     }
     
-    /**
-     * @dataProvider isValidUsernameProvider
-     * 
-     * @param bool $expectedResult
-     * @param string $username
-     */
-    public function testIsValidUsername($expectedResult, $username)
+    public function testIsValidUsername()
     {
-        $this->assertEquals($expectedResult, $this->validator->isValidUsername($username));
+        $this->assertTrue($this->validator->isValidUsername(self::USERNAME_VALID));
     }
     
-    
     /**
-     * @dataProvider isValidPasswordProvider
-     * 
-     * @param bool $expectedResult
-     * @param string $password
+     * @dataProvider isInvalidUsernameProvider
+     * @expectedException \Kata\Homeworks\H06RegistrationApi\InvalidUsernameException
      */
-    public function testIsValidPassword($expectedResult, $password, $passwordConfirm)
+    public function testIsInvalidUsername($username)
     {
         $this->assertEquals(
-            $expectedResult,
-            $this->validator->isValidPassword($password, $passwordConfirm)
+            $this->validator->isValidUsername($username)
         );
     }
     
+    
+    public function testIsValidPassword()
+    {
+        $this->assertTrue(
+            $this->validator->isValidPassword(self::PASSWORD_VALID, self::PASSWORD_VALID)
+        );
+    }
+    
+    /**
+     * @dataProvider isInvalidPasswordProvider
+     * @expectedException \Kata\Homeworks\H06RegistrationApi\InvalidPasswordException
+     */
+    public function testIsInvalidPassword($password, $passwordConfirm)
+    {
+        $this->validator->isValidPassword($password, $passwordConfirm);
+    }
+    
+    /**
+     * @dataProvider isInvalidPasswordConfirmProvider
+     * @expectedException \Kata\Homeworks\H06RegistrationApi\InvalidPasswordConfirmException
+     */
+    public function testIsInvalidPasswordConfirm($password, $passwordConfirm)
+    {
+        $this->validator->isValidPassword($password, $passwordConfirm);
+    }
     
 
     /** Data providers */
     
-    public function isValidUsernameProvider()
+    public function isInvalidUsernameProvider()
     {
         return array(
-            array(self::RESULT_OK,    self::USERNAME_VALID),
-            array(self::RESULT_ERROR, self::USERNAME_CAPITAL_LETTER),
-            array(self::RESULT_ERROR, self::USERNAME_ONLY_CAPITAL_LETTERS),
-            array(self::RESULT_ERROR, self::USERNAME_SPECIAL_CHARACTER),
-            array(self::RESULT_ERROR, self::USERNAME_TOO_SHORT),
-            array(self::RESULT_ERROR, str_repeat(self::USERNAME_VALID, 20)),
+            array(self::USERNAME_CAPITAL_LETTER),
+            array(self::USERNAME_ONLY_CAPITAL_LETTERS),
+            array(self::USERNAME_SPECIAL_CHARACTER),
+            array(self::USERNAME_TOO_SHORT),
+            array(str_repeat(self::USERNAME_VALID, 20)),
         );
     }
     
-    public function isValidPasswordProvider()
+    public function isInvalidPasswordProvider()
     {
         return array(
-            array(self::RESULT_OK,    self::PASSWORD_VALID, self::PASSWORD_VALID),
-            array(self::RESULT_ERROR, self::PASSWORD_VALID, self::PASSWORD_FOR_MISMATCH),
-            array(self::RESULT_ERROR, self::PASSWORD_TOO_SHORT, self::PASSWORD_TOO_SHORT),
+            array(self::PASSWORD_INVALID_CHARACTER, self::PASSWORD_FOR_MISMATCH),
+            array(self::PASSWORD_TOO_SHORT, self::PASSWORD_TOO_SHORT),
+        );
+    }
+    
+    public function isInvalidPasswordConfirmProvider()
+    {
+        return array(
+            array(self::PASSWORD_VALID, self::PASSWORD_FOR_MISMATCH),
+            array(self::PASSWORD_VALID, self::PASSWORD_FOR_MISMATCH_2),
         );
     }
 }
