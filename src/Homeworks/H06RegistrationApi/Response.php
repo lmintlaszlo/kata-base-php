@@ -4,6 +4,11 @@ namespace Kata\Homeworks\H06RegistrationApi;
 
 class Response
 {
+    const PROPERTY_SUCCESS     = 'success';
+    const PROPERTY_RESULT_CODE = 'resultCode';
+    const PROPERTY_RESULT_ID   = 'resultId';
+    const PROPERTY_MESSAGE     = 'resultMessage';
+    
     const SUCCESS_OK      = 'yes';
     const SUCCESS_FAILURE = 'no';
     
@@ -22,11 +27,11 @@ class Response
     
     public function display()
     {
-        echo json_encode(array(
-            'success'    => $this->success,
-            'resultCode' => $this->resultCode,
-            'resultId'   => $this->resultId,
-            'message'    => $this->message,
+        return json_encode(array(
+            self::PROPERTY_SUCCESS     => $this->success,
+            self::PROPERTY_RESULT_CODE => $this->resultCode,
+            self::PROPERTY_RESULT_ID   => $this->resultId,
+            self::PROPERTY_MESSAGE     => $this->message,
         ));
     }
     
@@ -48,5 +53,26 @@ class Response
     public function setMessage($value)
     {
         $this->message = $value;
+    }
+    
+    
+    public function getSuccess()
+    {
+        return $this->success;
+    }
+
+    public function getResultCode()
+    {
+        return $this->resultCode;
+    }
+
+    public function getResultId()
+    {
+        return $this->resultId;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
     }
 }

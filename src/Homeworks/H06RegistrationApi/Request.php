@@ -10,8 +10,8 @@ class Request
     
     function __construct($username, $password, $passwordConfirm)
     {
-        $this->username = $username;
-        $this->password = $password;
+        $this->username        = $username;
+        $this->password        = $password;
         $this->passwordConfirm = $passwordConfirm;
     }
 

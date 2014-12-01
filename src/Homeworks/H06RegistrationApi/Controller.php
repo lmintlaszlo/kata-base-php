@@ -6,44 +6,44 @@ namespace Kata\Homeworks\H06RegistrationApi;
 class Controller
 {
     private $response;
-    private $registrationRequest;
-    private $autoRegistrationRequest;
+    private $validator;
+    private $userBuilder;
+    private $userDao;
     
-    public function __construct()
+    public function __construct(Response $response, UserDao $userDao)
     {
-        $this->registrationRequest = 
-            new Request('Radella Gleeddyecker', 'Ra5Glee', 'Ra5Glee');
+        $this->response = $response;
+        $this->userDao  = $userDao;
         
-        $this->autoRegistrationRequest =
-            new Request('Radella Gleeddyecker');
+//        $this->registrationRequest = 
+//            new Request('Radella Gleeddyecker', 'Ra5Glee', 'Ra5Glee');
+//        
+//        $this->autoRegistrationRequest =
+//            new Request('Radella Gleeddyecker');
         
-        $this->response  = new Response();
     }
     
-    public function registration()
+    public function registration(Generator $generator, Request $request,
+        UserBuilder $userBuilder, Validator $validator)
     {
         try
-        {
-            $validator   = new Validator();
-            $userBuilder = new UserBuilder();
-            $userDao     = new UserDao();
-            
+        {            
             // Input validalas
-            $validator->isValidUsername($this->registrationRequest->username);
+            $validator->isValidUsername($request->username);
             $validator->isValidPassword(
-                $this->registrationRequest->password,
-                $this->registrationRequest->passwordConfirm
+                $request->password,
+                $request->passwordConfirm
             );
             
             // User letrehozas
             $user = $userBuilder->buildFromUsernameAndPass(
-                $this->registrationRequest->username,
-                $this->registrationRequest->password,
-                new Generator()
+                $request->username,
+                $request->password,
+                $generator
             );
             
             // User mentes
-            $insertedId = $userDao->store($user);
+            $insertedId = $this->userDao->store($user);
             
             // Response bealitas
             $this->setResponse(Response::SUCCESS_OK, Response::RESULT_CODE_OK, $insertedId);
@@ -52,51 +52,48 @@ class Controller
         catch (InvalidUsernameException $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_USERNAME_FORMAT_ERROR,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_USERNAME_FORMAT_ERROR,
                 Response::RESULT_ID_FAILURE, $e->getMessage());
         }
         catch (UserExistsException $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_USERNAME_EXISTS,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_USERNAME_EXISTS,
                 Response::RESULT_ID_FAILURE, $e->getMessage());
             
         }
         catch (PasswordException $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_PASSWORD_FORMAT_ERROR,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_PASSWORD_FORMAT_ERROR,
                 Response::RESULT_ID_FAILURE, $e->getMessage());
         }
         catch (\Exception $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_OTHER,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_OTHER,
                 Response::RESULT_ID_FAILURE, 'Fel 2 van bazmeg!');
         }
 
-        $this->response->display();
+        return $this->response->display();
     }
     
-    public function autoRegistration()
+    public function autoRegistration(Generator $generator, Request $request,
+        UserBuilder $userBuilder, Validator $validator)
     {
         try
-        {
-            $validator   = new Validator();
-            $userBuilder = new UserBuilder();
-            $userDao     = new UserDao();
-            
+        {            
             // Input validalas
-            $validator->isValidUsername($this->autoRegistrationRequest->username);
+            $validator->isValidUsername($request->username);
             
             // User letrehozas
             $user = $userBuilder->buildFromUsername(
-                $this->autoRegistrationRequest->username,
-                new Generator()
+                $request->username,
+                $generator
             );
             
             // User mentes
-            $insertedId = $userDao->store($user);
+            $insertedId = $this->userDao->store($user);
             
             // Response bealitas
             $this->setResponse(Response::SUCCESS_OK, Response::RESULT_CODE_OK, $insertedId);
@@ -105,26 +102,26 @@ class Controller
         catch (InvalidUsernameException $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_USERNAME_FORMAT_ERROR,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_USERNAME_FORMAT_ERROR,
                 Response::RESULT_ID_FAILURE, $e->getMessage());
         }
         catch (UserExistsException $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_USERNAME_EXISTS,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_USERNAME_EXISTS,
                 Response::RESULT_ID_FAILURE, $e->getMessage());
             
         }
         catch (PasswordException $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_PASSWORD_FORMAT_ERROR,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_PASSWORD_FORMAT_ERROR,
                 Response::RESULT_ID_FAILURE, $e->getMessage());
         }
         catch (\Exception $e)
         {
             // Response bealitas
-            $this->setResponse(Response::SUCCESS_FAULT, Response::RESULT_CODE_OTHER,
+            $this->setResponse(Response::SUCCESS_FAILURE, Response::RESULT_CODE_OTHER,
                 Response::RESULT_ID_FAILURE, 'Fel 2 van bazmeg!');
         }
 
@@ -133,9 +130,9 @@ class Controller
     
     private function setResponse($success, $responseCode, $responseId, $message = '')
     {
-        $this->response->success    = $success;
-        $this->response->resultCode = $responseCode;
-        $this->response->resultId   = $responseId;
-        $this->response->message    = $message;
+        $this->response->setSuccess($success);
+        $this->response->setResultCode($responseCode);
+        $this->response->setResultId($responseId);
+        $this->response->setMessage($message);
     }
 }

@@ -3,7 +3,7 @@
 use Kata\Homeworks\H04Velocity\Controller;
 use Kata\Homeworks\H04Velocity\LoginAttempt;
 
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class LControllerTest extends \PHPUnit_Framework_TestCase
 {
     const LOGIN_NAME     = 'pityu';
     const LOGIN_PASSWORD = 'pityu';
