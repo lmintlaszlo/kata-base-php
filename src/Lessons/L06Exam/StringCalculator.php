@@ -6,6 +6,6 @@ class StringCalculator
 {
     public function add($numberString)
     {
-        return 0;
+        return (int)$numberString;
     }
 }
