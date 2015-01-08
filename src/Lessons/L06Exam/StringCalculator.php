@@ -4,5 +4,8 @@ namespace Kata\Lessons\L06Exam;
 
 class StringCalculator
 {
-    
+    public function add($numberString)
+    {
+        return 0;
+    }
 }
