@@ -19,16 +19,28 @@ class StringCalculator
     public function add($numberString)
     {
         $sum = 0;
+        $negatives = array();
         
         $this->initDelimiter($numberString);
         $this->initNumberString($numberString);
         
         $numbers = preg_split("/".urldecode($this->delimiter)."/", $this->numberString);
-        
+
         foreach($numbers as $number)
         {
             $realInteger = (int)trim($number);
+            
+            if ($realInteger < 0)
+            {
+                $negatives[] = $number;
+            }
+            
             $sum += $realInteger;
+        }
+        
+        if(!empty($negatives))
+        {
+            throw new NegativeFoundException('Negatives not allowed! Received:' . implode(', ', $negatives));
         }
         
         return $sum;
