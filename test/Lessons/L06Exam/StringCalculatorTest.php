@@ -28,6 +28,8 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
             array('0,1', 1),
             array('0,,1', 1),
             array('0,2,1', 3),
+            array("0\n2,1", 3),
+            array("0\n2\n1,1", 4),
         );
     }
 }

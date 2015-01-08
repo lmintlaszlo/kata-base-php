@@ -8,11 +8,12 @@ class StringCalculator
     {
         $sum = 0;
         
-        $numbers = explode(',', $numberString);
+        //$numbers = explode(',', $numberString);
+        $numbers = preg_split("/(\n|,)/", $numberString);
         
         foreach ($numbers as $number)
         {
-            $realInteger = (int)$number;
+            $realInteger = (int)trim($number);
             $sum += $realInteger;
         }
         
