@@ -40,6 +40,10 @@ class StringCalculator
             }
             else
             {
+                if($realInteger > 1000)
+                {
+                    continue;
+                }
                 $sum += $realInteger;
             }
         }

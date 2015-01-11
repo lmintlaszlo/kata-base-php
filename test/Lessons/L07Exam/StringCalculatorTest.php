@@ -44,6 +44,7 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
         return array(
             array('', 0),
             array('1', 1),
+            array('1,1001', 1),
             array('0,1', 1),
             array('0,,1', 1),
             array('0,2,1', 3),
