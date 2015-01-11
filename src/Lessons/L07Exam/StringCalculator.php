@@ -5,7 +5,9 @@ namespace Kata\Lessons\L07Exam;
 class StringCalculator
 {    
     
-    CONST DELIMITER_SEPARATOR = "\n";
+    const DELIMITER_SEPARATOR = "\n";
+    
+    const NEGATIVE_EXCEPTION_STRING = "Negatives not allowed! Received:";
     
     // Indicates the numberstring
     private $numberString;
@@ -13,13 +15,15 @@ class StringCalculator
     // Indicates the given delimiter
     private $delimiter = '(\n|,)';
     
+    // Array to store the receives negative numbers
+    private $negatives = array();
+    
     // Indicates if a custom delimiter is given
     private $customDelimiterGiven = false;
     
     public function add($numberString)
     {
         $sum = 0;
-        $negatives = array();
         
         $this->initDelimiter($numberString);
         $this->initNumberString($numberString);
@@ -30,18 +34,17 @@ class StringCalculator
         {
             $realInteger = (int)trim($number);
             
-            if ($realInteger < 0)
+            if ($this->isNegative($realInteger))
             {
-                $negatives[] = $number;
+                $this->collectNegatives($realInteger);                
             }
-            
-            $sum += $realInteger;
+            else
+            {
+                $sum += $realInteger;
+            }
         }
         
-        if(!empty($negatives))
-        {
-            throw new NegativeFoundException('Negatives not allowed! Received:' . implode(', ', $negatives));
-        }
+        $this->checkNegatives();
         
         return $sum;
     }
@@ -76,5 +79,45 @@ class StringCalculator
             $array = explode(self::DELIMITER_SEPARATOR, $numberString);
             $this->numberString = $array[1];
         }        
+    }
+    
+    /**
+     * Checks if a number is negative.
+     * 
+     * @param int $number  The number to be checked
+     * 
+     * @return boolean  True if negative, false otherwise
+     */
+    private function isNegative($number)
+    {
+        return ($number < 0);
+    }
+    
+    /**
+     * Collects the received negative numbers.
+     * 
+     * @param int $number  The number to check for negativity
+     * 
+     * @return void
+     */
+    private function collectNegatives($number)
+    {
+        if ($number < 0)
+        {
+            $this->negatives[] = $number;
+        }
+    }
+    
+    /**
+     * Checks if a negative number was received and throws exception if was.
+     * 
+     * @throws NegativeFoundException
+     */
+    private function checkNegatives()
+    {
+        if(!empty($this->negatives))
+        {
+            throw new NegativeFoundException('Negatives not allowed! Received:' . implode(', ', $this->negatives));
+        }
     }
 }

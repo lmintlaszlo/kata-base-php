@@ -25,11 +25,16 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
     /**
      * Tests if add thors exception on negatives.
      * 
-     * @expectedException \Kata\Lessons\L07Exam\NegativeFoundException
      */
     public function testAddThrowsExcceptionForNegative()
     {
-        $this->stringCalculator->add('0,-1,2');
+        $negative = '-12';
+        
+        $this->setExpectedException(
+            '\Kata\Lessons\L07Exam\NegativeFoundException',
+            StringCalculator::NEGATIVE_EXCEPTION_STRING . $negative
+        );
+        $this->stringCalculator->add('0,' . $negative . ',2');
     }
     
     /** Data providers */
