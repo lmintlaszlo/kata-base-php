@@ -1,6 +1,6 @@
 <?php
 
-use Kata\Lessons\L06Exam\StringCalculator;
+use Kata\Lessons\L07Exam\StringCalculator;
 
 
 class StringCalculatorTest extends PHPUnit_Framework_TestCase
@@ -25,7 +25,7 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
     /**
      * Tests if add thors exception on negatives.
      * 
-     * @expectedException \Kata\Lessons\L06Exam\NegativeFoundException
+     * @expectedException \Kata\Lessons\L07Exam\NegativeFoundException
      */
     public function testAddThrowsExcceptionForNegative()
     {
