@@ -30,22 +30,22 @@ class StringCalculator
         
         $numbers = preg_split("/".urldecode($this->delimiter)."/", $this->numberString);
 
-        foreach($numbers as $number)
+        foreach ($numbers as $number)
         {
             $realInteger = (int)trim($number);
             
             if ($this->isNegative($realInteger))
             {
-                $this->collectNegatives($realInteger);                
+                $this->collectNegatives($realInteger);
+                continue;
             }
-            else
+            
+            if ($this->moreThan1000($realInteger))
             {
-                if($realInteger > 1000)
-                {
-                    continue;
-                }
-                $sum += $realInteger;
+                continue;                
             }
+            
+            $sum += $realInteger;
         }
         
         $this->checkNegatives();
@@ -60,7 +60,7 @@ class StringCalculator
      */
     private function initDelimiter($numberString)
     {        
-        if(preg_match("#//(.*)".self::DELIMITER_SEPARATOR."[0-9]#", $numberString, $matches))
+        if (preg_match("#//(.*)".self::DELIMITER_SEPARATOR."[0-9]#", $numberString, $matches))
         {
             $this->customDelimiterGiven = true;
             $this->delimiter = urlencode($matches[1]);
@@ -78,7 +78,7 @@ class StringCalculator
     {
         $this->numberString = $numberString;
         
-        if(true === $this->customDelimiterGiven)
+        if (true === $this->customDelimiterGiven)
         {
             $array = explode(self::DELIMITER_SEPARATOR, $numberString);
             $this->numberString = $array[1];
@@ -119,9 +119,22 @@ class StringCalculator
      */
     private function checkNegatives()
     {
-        if(!empty($this->negatives))
+        if (!empty($this->negatives))
         {
             throw new NegativeFoundException('Negatives not allowed! Received:' . implode(', ', $this->negatives));
         }
+    }
+    
+    
+    /**
+     * Checks if the number is more than 1000.
+     * 
+     * @param int $number  The number to be checked
+     * 
+     * @return boolean  True if more false otherwise
+     */
+    private function moreThan1000($number)
+    {
+        return $number > 1000;
     }
 }
