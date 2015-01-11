@@ -26,7 +26,7 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
      * Tests if add thors exception on negatives.
      * 
      */
-    public function _testAddThrowsExcceptionForNegative()
+    public function testAddThrowsExcceptionForNegative()
     {
         $negative = '-12';
         
@@ -45,15 +45,17 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
             array('', 0),
             array('1', 1),
             array('1,1001', 1),
-//            array('0,1', 1),
-//            array('0,,1', 1),
-//            array('0,2,1', 3),
-//            array("0\n2,1", 3),
-//            array("0\n2\n1,1", 4),
-            array("//-\n0-2-1-1", 4),
-            array("//#\n0#2#1#1", 4),
-//            array("//\n\n0\n2\n1\n1", 4),
-            array("//***\n0***2***1***1", 4),
+            array('0,1', 1),
+            array('0,,1', 1),
+            array('0,2,1', 3),
+            array("0\n2,1", 3),
+            array("0\n2\n1,1", 4),
+            array("//[-]\n0-2-1-1", 4),
+            array("//[#]\n0#2#1#1", 4),
+            array("//[\n]\n0\n2\n1\n1", 4),
+            array("//[***]\n0***2***1***1", 4),
+            array("//[*][t]\n0*2*1t1", 4),
+            array("//[**][tt]\n0**2**1tt3", 6),
         );
     }
 }

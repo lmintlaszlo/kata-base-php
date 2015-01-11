@@ -12,8 +12,11 @@ class StringCalculator
     // Indicates the numberstring
     private $numberString;
     
-    // Indicates the given delimiter
-    private $delimiter = '(\n|,)';
+    // Indicates the given delimiters
+    private $delimiters = array("\n", ",");
+    
+    // Indicates the delimiter as string for preg split
+    private $delimiterString = "";
     
     // Array to store the receives negative numbers
     private $negatives = array();
@@ -25,15 +28,11 @@ class StringCalculator
     {
         $sum = 0;
         
-        $this->initDelimiter($numberString);
+        $this->initDelimiters($numberString);
+        $this->initDelimiterRegex();
         $this->initNumberString($numberString);
         
-        var_dump(urldecode($this->delimiter));
-        var_dump($this->numberString);
-        
-        $numbers = preg_split("/".preg_quote(urldecode($this->delimiter))."/", $this->numberString);
-
-        print_r($numbers);
+        $numbers = preg_split("/(".$this->delimiterString.")/", $this->numberString);
         
         foreach ($numbers as $number)
         {
@@ -63,15 +62,30 @@ class StringCalculator
      * 
      * @param string $numberString  The string containing the delimiter and the numbers
      */
-    private function initDelimiter($numberString)
+    private function initDelimiters($numberString)
     {        
-        if (preg_match("#//(.*)".self::DELIMITER_SEPARATOR."[0-9]#", $numberString, $matches))
+        if (preg_match("#//(\[(.*)\])+".self::DELIMITER_SEPARATOR."[0-9]#", $numberString, $matches))
         {
             $this->customDelimiterGiven = true;
-            $this->delimiter = urlencode($matches[1]);
+            
+            // regex?
+            $delimiters = explode('][', trim($matches[1], "[]"));
+            
+            $this->delimiters = $delimiters;
         }
     }
     
+    private function initDelimiterRegex()
+    {
+        foreach ($this->delimiters as $index => $delimiter)
+        {
+            $this->delimiters[$index] = preg_quote($delimiter);
+        }
+        
+        $this->delimiterString = implode("|", $this->delimiters);
+    }
+
+
     /**
      * Returns the array of the numbers to be summed.
      * 
