@@ -28,8 +28,13 @@ class StringCalculator
         $this->initDelimiter($numberString);
         $this->initNumberString($numberString);
         
-        $numbers = preg_split("/".urldecode($this->delimiter)."/", $this->numberString);
+        var_dump(urldecode($this->delimiter));
+        var_dump($this->numberString);
+        
+        $numbers = preg_split("/".preg_quote(urldecode($this->delimiter))."/", $this->numberString);
 
+        print_r($numbers);
+        
         foreach ($numbers as $number)
         {
             $realInteger = (int)trim($number);
