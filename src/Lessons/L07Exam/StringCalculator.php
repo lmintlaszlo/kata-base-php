@@ -27,33 +27,33 @@ class StringCalculator
     public function add($numberString)
     {
         $sum = 0;
-        
+
         $this->initDelimiters($numberString);
         $this->initDelimiterRegex();
         $this->initNumberString($numberString);
-        
+
         $numbers = preg_split("/(".$this->delimiterString.")/", $this->numberString);
-        
+
         foreach ($numbers as $number)
         {
             $realInteger = (int)trim($number);
-            
+
             if ($this->isNegative($realInteger))
             {
                 $this->collectNegatives($realInteger);
                 continue;
             }
-            
+
             if ($this->moreThan1000($realInteger))
             {
                 continue;                
             }
-            
+
             $sum += $realInteger;
         }
-        
+
         $this->checkNegatives();
-        
+
         return $sum;
     }
     
@@ -63,15 +63,11 @@ class StringCalculator
      * @param string $numberString  The string containing the delimiter and the numbers
      */
     private function initDelimiters($numberString)
-    {        
-        if (preg_match("#//(\[(.*)\])+".self::DELIMITER_SEPARATOR."[0-9]#", $numberString, $matches))
+    {     
+        if (preg_match_all("/\[(?P<delimiters>[^\]]+)\]/", $numberString, $matches))
         {
-            $this->customDelimiterGiven = true;
-            
-            // regex?
-            $delimiters = explode('][', trim($matches[1], "[]"));
-            
-            $this->delimiters = $delimiters;
+            $this->customDelimiterGiven = true;            
+            $this->delimiters = $matches['delimiters'];
         }
     }
     
@@ -99,9 +95,9 @@ class StringCalculator
         
         if (true === $this->customDelimiterGiven)
         {
-            $array = explode(self::DELIMITER_SEPARATOR, $numberString);
+            $array = preg_split("/\n(?=[0-9])/", $numberString, 2);
             $this->numberString = $array[1];
-        }        
+        }
     }
     
     /**
