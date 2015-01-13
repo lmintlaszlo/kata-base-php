@@ -64,10 +64,10 @@ class StringCalculator
      */
     private function initDelimiters($numberString)
     {     
-        if (preg_match_all("/\[(?P<delimiters>[^\]]+)\]/", $numberString, $matches))
+        if (preg_match_all("/\[([^\]]+)\]/", $numberString, $matches))
         {
             $this->customDelimiterGiven = true;            
-            $this->delimiters = $matches['delimiters'];
+            $this->delimiters = $matches[1];
         }
     }
     
