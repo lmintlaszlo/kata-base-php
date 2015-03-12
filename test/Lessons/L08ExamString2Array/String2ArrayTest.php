@@ -14,7 +14,10 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
     /**
      * Checks if the method throws exception on not string input.
      * 
+     * @param type $string  The string
+     * 
      * @expectedException \Kata\Lessons\L08ExamString2Array\Exceptions\InvalidStringException
+     * 
      * @dataProvider providerOneLineForException
      */
     public function testOneLineForException($notString)
@@ -25,6 +28,8 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
     /**
      * Checks if the method can expode a string by commas.
      * 
+     * @param type $string  The string
+     * 
      * @dataProvider providerOneLineReturnsArray
      */
     public function testOneLineReturnsArray($string)
@@ -32,6 +37,17 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $this->string2Array->oneLine($string));
     }
     
+    /**
+     * Checks if the method does its job.
+     * 
+     * @param type $string  The string
+     * 
+     * @dataProvider providerOneLine
+     */
+    public function testOneLine($string, $expectedArray)
+    {
+        $this->assertEquals($expectedArray, $this->string2Array->oneLine($string));
+    }
     
     /** Data providers */
     
@@ -50,6 +66,15 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
             array(''),
             array('asdf'),
             array('asdf, fdas,dsaff'),
+        );
+    }
+    
+    public function providerOneLine()
+    {
+        return array(
+            array('',                 array('')),
+            array('asdf',             array('asdf')),
+            array('asdf, fdas,dsaff', array('asdf',' fdas','dsaff')),
         );
     }
 }
