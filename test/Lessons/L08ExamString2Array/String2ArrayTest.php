@@ -46,14 +46,34 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
      */
     public function testOneLine($string, $expectedArray)
     {
-        
-        $returned = $this->string2Array->oneLine($string);
-        
-        print_r($returned);
-        print_r($expectedArray);
-        
-        $this->assertEquals($expectedArray, $returned);
+        $this->assertEquals($expectedArray, $this->string2Array->oneLine($string));
     }
+    
+    
+    
+    
+    
+    
+    /**
+     * Checks if the method throws exception on not string input.
+     * 
+     * @param type $notString  The string
+     * 
+     * @expectedException \Kata\Lessons\L08ExamString2Array\Exceptions\InvalidStringException
+     * 
+     * @dataProvider providerOneLineForException
+     */
+    public function testUseLabelsForException($notString)
+    {
+        $this->string2Array->useLabels($notString);
+    }
+    
+    
+    
+    
+    
+    
+    
     
     /** Data providers */
     

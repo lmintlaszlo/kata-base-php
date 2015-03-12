@@ -12,7 +12,7 @@ class String2Array
     /**
      * Handles one line strings.
      * 
-     * @param type $string
+     * @param type $string  The string to be parsed
      * 
      * @throws InvalidStringException
      */
@@ -37,5 +37,21 @@ class String2Array
             'lines'  => $lines,
             'values' => $values,
         );
+    }
+    
+    /**
+     * Parses a string by labels.
+     * 
+     * @param string $string  The string to be parsed
+     * 
+     * @throws InvalidStringException
+     */
+    public function useLabels($string)
+    {        
+        if (!is_string($string))
+        {
+            throw new InvalidStringException('Invalid string');
+        }
+        
     }
 }
