@@ -49,11 +49,6 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedArray, $this->string2Array->oneLine($string));
     }
     
-    
-    
-    
-    
-    
     /**
      * Checks if the method throws exception on not string input.
      * 
@@ -68,8 +63,14 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
         $this->string2Array->useLabels($notString);
     }
     
-    
-    
+    /**
+     * @dataProvider providerUseLabels
+     */
+    public function testUseLabels($string)
+    {
+        
+        $this->assertInstanceOf('Kata\Lessons\L08ExamString2Array\LabelledData', $this->string2Array->useLabels($string));
+    }
     
     
     
@@ -112,7 +113,19 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
             array(1),
             array(true),
             array(array()),
-            array(" ".String2Array::LABELLED_STRING_BEGIN),
+            array(" ".String2Array::LABELLED_STRING_BEGIN.PHP_EOL),
+        );
+    }
+    
+    public function providerUseLabels()
+    {
+        $string = String2Array::LABELLED_STRING_BEGIN.PHP_EOL.
+            "Name,Email,Phone".PHP_EOL.
+            "Mark,marc@be.com,998".PHP_EOL.
+            "Noemi,noemi@cc.com,978";
+        
+        return array(
+            array($string),
         );
     }
 }

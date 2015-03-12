@@ -1,5 +1,7 @@
 <?php
 
+namespace Kata\Lessons\L08ExamString2Array;
+
 /**
  * Description of LabelledData
  *

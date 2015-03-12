@@ -34,8 +34,7 @@ class String2Array
             $newValues = explode(self::SEPARATOR_COMMA, $line);
             $values    = array_merge($values, $newValues);
         }
-        
-        
+
         return array(
             'lines'  => $lines,
             'values' => $values,
@@ -56,6 +55,18 @@ class String2Array
             throw new InvalidLabelledStringException('Invalid string');
         }
         
+        $lines  = explode(self::SEPARATOR_NL, $string);        
+        $labels = explode(self::SEPARATOR_COMMA, $lines[1]);
+        $data   = array();
+        
+        unset($lines[0], $lines[1]);
+        
+        foreach ($lines as $line)
+        {
+            $data[] = explode(self::SEPARATOR_COMMA, $line);
+        }
+        
+        return new LabelledData($labels, $data);
     }
     
     /**
@@ -67,6 +78,6 @@ class String2Array
      */
     private function isLabelled($string)
     {        
-        return (bool)preg_match("/^".self::LABELLED_STRING_BEGIN."/", $string);
+        return (bool)preg_match("/^".self::LABELLED_STRING_BEGIN."\n/", $string);
     }
 }

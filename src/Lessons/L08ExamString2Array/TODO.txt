@@ -1,6 +1,7 @@
 - Ha nem string akkor exception
 - Kitalalni, hogy mi van ha egy  ugyanolyan value-k avnnaka sorokban
-- Egy soros és két soros legyen két külön függvény az osztályban
 - Kommentek felvezetése a value object-be
 - String2Array osztály konstruktora kapja paraméterként a stringet és végezze rajta az ellenőrzést (teszt szempontból macerás lehet)
 - String2Array exception ős létrehozás
+- A useLabels a oneLine továbbfejlesztése legyen. Vagy a közös részeket kiemelni
+- kommentek
