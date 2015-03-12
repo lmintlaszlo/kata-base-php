@@ -20,6 +20,6 @@ class String2Array
             throw new InvalidStringException('Invalid string');
         }
         
-        return explode(',', $string);
+        return preg_split('/,/', $string);
     }
 }
