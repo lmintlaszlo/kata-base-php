@@ -78,10 +78,10 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
     public function providerOneLine()
     {
         return array(
-//            array("",                    array("lines" => array(""), "values" => array(""))),
-//            array("asdf",                array("lines" => array("asdf"), "values" => array("asdf"))),
-//            array("asdf, fdas,dsaff",    array("lines" => array("asdf, fdas,dsaff"), "values"  => array("asdf"," fdas","dsaff"))),
-//            array("asdf, fdas,twrtwe",   array("lines" => array("asdf, fdas,twrtwe"), "values" => array("asdf", " fdas","twrtwe"))),            
+            array("",                    array("lines" => array(""), "values" => array(""))),
+            array("asdf",                array("lines" => array("asdf"), "values" => array("asdf"))),
+            array("asdf, fdas,dsaff",    array("lines" => array("asdf, fdas,dsaff"), "values"  => array("asdf"," fdas","dsaff"))),
+            array("asdf, fdas,twrtwe",   array("lines" => array("asdf, fdas,twrtwe"), "values" => array("asdf", " fdas","twrtwe"))),            
             array("211,22,35\n10,20,33", array("lines" => array("211,22,35", "10,20,33"), "values" => array("211","22","35","10","20","33"))),
         );
     }
