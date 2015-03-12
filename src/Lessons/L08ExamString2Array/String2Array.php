@@ -19,5 +19,7 @@ class String2Array
         {
             throw new InvalidStringException('Invalid string');
         }
+        
+        return array();
     }
 }
