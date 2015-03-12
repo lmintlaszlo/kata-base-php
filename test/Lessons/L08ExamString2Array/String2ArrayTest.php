@@ -46,7 +46,13 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
      */
     public function testOneLine($string, $expectedArray)
     {
-        $this->assertEquals($expectedArray, $this->string2Array->oneLine($string));
+        
+        $returned = $this->string2Array->oneLine($string);
+        
+        print_r($returned);
+        print_r($expectedArray);
+        
+        $this->assertEquals($expectedArray, $returned);
     }
     
     /** Data providers */
@@ -63,18 +69,20 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
     public function providerOneLineReturnsArray()
     {
         return array(
-            array(''),
-            array('asdf'),
-            array('asdf, fdas,dsaff'),
+            array(""),
+            array("asdf"),
+            array("asdf, fdas,dsaff"),
         );
     }
     
     public function providerOneLine()
     {
         return array(
-            array('',                 array('')),
-            array('asdf',             array('asdf')),
-            array('asdf, fdas,dsaff', array('asdf',' fdas','dsaff')),
+//            array("",                    array("lines" => array(""), "values" => array(""))),
+//            array("asdf",                array("lines" => array("asdf"), "values" => array("asdf"))),
+//            array("asdf, fdas,dsaff",    array("lines" => array("asdf, fdas,dsaff"), "values"  => array("asdf"," fdas","dsaff"))),
+//            array("asdf, fdas,twrtwe",   array("lines" => array("asdf, fdas,twrtwe"), "values" => array("asdf", " fdas","twrtwe"))),            
+            array("211,22,35\n10,20,33", array("lines" => array("211,22,35", "10,20,33"), "values" => array("211","22","35","10","20","33"))),
         );
     }
 }

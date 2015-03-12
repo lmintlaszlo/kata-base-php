@@ -1,1 +1,2 @@
 - Ha nem string akkor exception
+- Kitalalni, hogy mi van ha egy  ugyanolyan value-k avnnaka sorokban
