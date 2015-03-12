@@ -1,0 +1,1 @@
+- Ha nem string akkor exception
