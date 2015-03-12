@@ -3,3 +3,4 @@
 - Egy soros és két soros legyen két külön függvény az osztályban
 - Kommentek felvezetése a value object-be
 - String2Array osztály konstruktora kapja paraméterként a stringet és végezze rajta az ellenőrzést (teszt szempontból macerás lehet)
+- String2Array exception ős létrehozás

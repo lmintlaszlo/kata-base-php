@@ -3,11 +3,14 @@
 namespace Kata\Lessons\L08ExamString2Array;
 
 use Kata\Lessons\L08ExamString2Array\Exceptions\InvalidStringException;
+use Kata\Lessons\L08ExamString2Array\Exceptions\InvalidLabelledStringException;
 
 class String2Array
 {
     const SEPARATOR_COMMA = ",";
     const SEPARATOR_NL    = "\n";
+    
+    const LABELLED_STRING_BEGIN = "#useFirstLineAsLabels";
     
     /**
      * Handles one line strings.
@@ -47,11 +50,23 @@ class String2Array
      * @throws InvalidStringException
      */
     public function useLabels($string)
-    {        
-        if (!is_string($string))
+    {
+        if (!is_string($string) || !$this->isLabelled($string))
         {
-            throw new InvalidStringException('Invalid string');
+            throw new InvalidLabelledStringException('Invalid string');
         }
         
+    }
+    
+    /**
+     * Checks if a string is labelled.
+     * 
+     * @param string $string  The string
+     * 
+     * @return boolean
+     */
+    private function isLabelled($string)
+    {        
+        return (bool)preg_match("/^".self::LABELLED_STRING_BEGIN."/", $string);
     }
 }

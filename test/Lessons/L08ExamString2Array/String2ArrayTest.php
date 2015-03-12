@@ -59,9 +59,9 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
      * 
      * @param type $notString  The string
      * 
-     * @expectedException \Kata\Lessons\L08ExamString2Array\Exceptions\InvalidStringException
+     * @expectedException \Kata\Lessons\L08ExamString2Array\Exceptions\InvalidLabelledStringException
      * 
-     * @dataProvider providerOneLineForException
+     * @dataProvider providerUseLabelsForException
      */
     public function testUseLabelsForException($notString)
     {
@@ -103,6 +103,16 @@ class String2ArrayTest extends PHPUnit_Framework_TestCase
             array("asdf, fdas,dsaff",    array("lines" => array("asdf, fdas,dsaff"), "values"  => array("asdf"," fdas","dsaff"))),
             array("asdf, fdas,twrtwe",   array("lines" => array("asdf, fdas,twrtwe"), "values" => array("asdf", " fdas","twrtwe"))),            
             array("211,22,35\n10,20,33", array("lines" => array("211,22,35", "10,20,33"), "values" => array("211","22","35","10","20","33"))),
+        );
+    }
+    
+    public function providerUseLabelsForException()
+    {
+        return array(
+            array(1),
+            array(true),
+            array(array()),
+            array(" ".String2Array::LABELLED_STRING_BEGIN),
         );
     }
 }
